@@ -4,20 +4,47 @@ const {
   registerUser,
   loginUser,
   logoutUser,
+  updatePassword,
+  updateUserInformation,
+  forgotPassword,
   resetPassword,
 } = require("../controllers/userController");
 
 // This middleware will verify the user before giving them access to the data.
 const { isAuthenticatedUser } = require("../middleware/authorization");
-const { checkUserDoExist, runValidationUser, resetPasswordValidations, verifyUserPassword } = require("../middleware/validationMiddleware");
+const {
+  checkUserDoExist,
+  runValidationUser,
+  updatePasswordValidations,
+  verifyUserPassword,
+  checkUserDoesNotExist,
+  forgotPasswordValidations,
+} = require("../middleware/validationMiddleware");
 
 // Get is a test route.
-router.route("/register").post(runValidationUser, registerUser);
+router
+  .route("/register")
+  .post(checkUserDoesNotExist, runValidationUser, registerUser);
 
-router.route("/login").post(checkUserDoExist, verifyUserPassword,loginUser);
+router.route("/login").post(checkUserDoExist, verifyUserPassword, loginUser);
 
 router.route("/logout").get(logoutUser);
 
-router.route("/reset-password").post(isAuthenticatedUser, resetPasswordValidations, resetPassword);
+router
+  .route("/password/update")
+  .put(isAuthenticatedUser, updatePasswordValidations, updatePassword);
+
+router
+  .route("/update-information")
+  .put(
+    isAuthenticatedUser,
+    runValidationUser,
+    verifyUserPassword,
+    updateUserInformation
+  );
+
+router.route("/password/forgot").post(checkUserDoExist, forgotPassword);
+
+router.route("/password/reset/:token").put(forgotPasswordValidations, resetPassword)
 
 module.exports = router;

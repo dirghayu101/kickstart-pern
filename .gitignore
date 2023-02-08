@@ -133,4 +133,4 @@ dist
 
 # Frontend dependencies
 /frontend/node_modules
-./frontend/config.env
+/backend/config.env

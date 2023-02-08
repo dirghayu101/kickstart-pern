@@ -10,7 +10,7 @@ app.use(cookieParser());
 const user = require("./routes/userRoutes")
 
 // Router use
-app.use("/api/v1", user)
+app.use("/api/v1/user", user)
 
 /* Error Middleware. 
 This location is crucial because it will come when the next will be invoked from the routes.
