@@ -132,5 +132,5 @@ dist
 .pnp.*
 
 # Frontend dependencies
-./frontend/node_modules
+/frontend/node_modules
 ./frontend/config.env
