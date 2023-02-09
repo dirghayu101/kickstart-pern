@@ -7,6 +7,7 @@ const {
   insertResetPasswordToken,
   deleteResetToken,
   findUserWithResetPasswordToken,
+  RemoveTimedOutEntries,
 } = require("../database/databaseUserRequests");
 const sendToken = require("../utils/jwtSetup");
 const crypto = require("crypto");
@@ -79,6 +80,7 @@ exports.updateUserInformation = catchAsyncError(async (req, res, next) => {
 
 exports.forgotPassword = catchAsyncError(async (req, res, next) => {
   const resetToken = getResetPasswordToken(req);
+  await RemoveTimedOutEntries()
   let result = await insertResetPasswordToken(req);
   if (!result) {
     return next(
@@ -108,25 +110,18 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 });
 
 exports.resetPassword = catchAsyncError(async (req, res, next) => {
+  await RemoveTimedOutEntries()
   const token = req.params.token
   const resetPasswordToken = crypto
     .createHash("sha256")
     .update(token)
     .digest("hex");
-  
+
   const row = await findUserWithResetPasswordToken(resetPasswordToken)
   if(!row.length){
     return next(new ErrorHandler("Reset Password Token is invalid or has expired.", 404))
   }
-  const expireTime = parseInt(row[0].resetPasswordExpire)
-  const currentTime = Date.now()
-  // This will delete the tuple with the entry of userID and corresponding token.
   const userID = row[0].userID
-  if(currentTime > expireTime){
-    
-    await deleteResetToken(userID)
-    return next(new ErrorHandler("Reset Password Token is invalid or has expired.", 404))
-  }
   const newPassword = req.body.password 
   updatePassword(userID, newPassword)
   await deleteResetToken(userID)

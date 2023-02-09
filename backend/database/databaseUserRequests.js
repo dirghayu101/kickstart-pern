@@ -103,9 +103,21 @@ module.exports.insertResetPasswordToken = async (req) => {
   return result
 }
 
+module.exports.RemoveTimedOutEntries = async () => {
+  let currentTime = Date.now()
+  const deleteScript = `DELETE FROM public."Reset-Password" WHERE "resetPasswordExpire" < '${currentTime}'`
+  let result
+  try {
+    result = await databaseConnection.query(deleteScript)
+  } catch (error) {
+    console.log(error)
+  }
+  client.end
+  return result
+}
+
 // Reset password delete tuple request
 module.exports.deleteResetToken = async (userID) => {
- 
   const deleteScript = `DELETE FROM public."Reset-Password" WHERE "userID" = '${userID}';`
   let result
   try {
@@ -130,3 +142,4 @@ module.exports.findUserWithResetPasswordToken = async (resetPasswordToken) => {
   client.end
   return result
 }
+
