@@ -14,5 +14,5 @@ exports.isAuthenticatedUser = catchAsyncError(async (req, res, next) => {
         req.user = await getUserByID(jwtVerified.id)
         return next()
     }
-    return next(new ErrorHandler("Authorization failed.", 401))
+    return next(new ErrorHandler("Authentication failed.", 401))
 })

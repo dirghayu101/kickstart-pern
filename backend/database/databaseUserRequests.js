@@ -1,8 +1,6 @@
 const { v4: createUserId } = require("uuid");
 const bcrypt = require("bcryptjs");
 const databaseConnection = require("./connection");
-const catchAsyncError = require("../middleware/catchAsyncError");
-const client = require("./connection");
 
 module.exports.insertUser = async (req) => {
   const {
@@ -22,7 +20,7 @@ module.exports.insertUser = async (req) => {
     console.log(error);
     return false;
   } finally {
-    client.end;
+    databaseConnection.end;
   }
   req.userID = userID;
   return true;
@@ -39,7 +37,7 @@ module.exports.findUser = async (req) => {
   } catch (error) {
     result = error;
   }
-  client.end;
+  databaseConnection.end;
   return result;
 };
 
@@ -53,7 +51,7 @@ module.exports.getUserByID = async (userID) => {
   } catch (error) {
     result = error;
   }
-  client.end;
+  databaseConnection.end;
   return result;
 };
 
@@ -66,7 +64,7 @@ module.exports.updatePassword = async (userID, newPassword) => {
   } catch (error) {
     console.log(error);
   }
-  client.end;
+  databaseConnection.end;
   return result;
 };
 
@@ -82,7 +80,7 @@ module.exports.updateUserInformationRequest = async (req) => {
   } catch (error) {
     console.log(error);
   }
-  client.end;
+  databaseConnection.end;
   return result;
 };
 
@@ -99,7 +97,7 @@ module.exports.insertResetPasswordToken = async (req) => {
   } catch (error) {
     console.log(error)
   }
-  client.end
+  databaseConnection.end
   return result
 }
 
@@ -112,7 +110,7 @@ module.exports.RemoveTimedOutEntries = async () => {
   } catch (error) {
     console.log(error)
   }
-  client.end
+  databaseConnection.end
   return result
 }
 
@@ -125,7 +123,7 @@ module.exports.deleteResetToken = async (userID) => {
   } catch (error) {
     console.log(error)
   }
-  client.end
+  databaseConnection.end
   return result
 }
 
@@ -139,7 +137,7 @@ module.exports.findUserWithResetPasswordToken = async (resetPasswordToken) => {
   } catch (error) {
     console.log(error)
   }
-  client.end
+  databaseConnection.end
   return result
 }
 
