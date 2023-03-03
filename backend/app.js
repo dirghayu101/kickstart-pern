@@ -8,9 +8,11 @@ app.use(cookieParser());
 
 // Router imports
 const user = require("./routes/userRoutes")
+const admin = require("./routes/adminRoutes")
 
 // Router use
 app.use("/api/v1/user", user)
+app.use("/api/v1/admin", admin)
 
 /* Error Middleware. 
 This location is crucial because it will come when the next will be invoked from the routes.
