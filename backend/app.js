@@ -9,9 +9,10 @@ app.use(cookieParser());
 // Router imports
 const user = require("./routes/userRoutes")
 const admin = require("./routes/adminRoutes")
+const userReservation = require('./routes/userReservation')
 
 // Router use
-app.use("/api/v1/user", user)
+app.use("/api/v1/user", user, userReservation)
 app.use("/api/v1/admin", admin)
 
 /* Error Middleware. 

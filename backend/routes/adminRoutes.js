@@ -20,6 +20,7 @@ const router = express.Router();
 router.route("/suman-kickstart").get(sendAdminLogin).post(authenticateAdmin);
 router.route("/logout").get(isAuthenticatedAdmin, logoutAdmin);
 
+// NOTE: http://localhost:4500/api/v1/admin/info/reservation?type=single&date=2023-02-02&space=conference%20cubicle&status=active  --> Example of the below route
 router
   .route("/info/reservation")
   .get(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, sendReservationInformation);

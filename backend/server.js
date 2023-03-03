@@ -30,8 +30,7 @@ const deleteTestRows = async () => {
 const start = async () => {
   try {
     await connectDatabase.connect();
-    // await deleteTestRows()
-    await insertTestRows()
+    await deleteTestRows()
     console.log(`Database connected successfully!`);
     app.listen(PORT, () => {
       console.log(`Server is listening on http://localhost:${PORT}`);
