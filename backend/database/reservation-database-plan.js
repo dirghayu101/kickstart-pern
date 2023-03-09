@@ -1,3 +1,48 @@
+/*
+Requirements: 
+-> Single Reservation info
+-> Multiple reservation info based on date and seat type filter.
+-> All current active reservations.
+-> Current active reservation based on space type.
+-> All reservations of a particular user.
+-> All active reservations of a particular user.
+-> All reservations of a single seat.
+-> All current reservations of a single seat.
+-> A particular space type reservation based on different params like all reservation which are active of a current space type.
+
+
+There will be following parameters in sendActiveReservationInformation route:
+1. space = {conference, cubicle, private office, hot seat, all} --> default will be all.
+3. status = { all, update} --> default will be all.
+4.1. sDate = startDate
+4.2. eDate = endDate
+5. tNum = this will send information about a single unique reservation. Information about its transaction number, date, status, user related.
+6. uID = all reservations of this user. Active and past depends on the previous parameters.
+7. seatID = all reservations of a single seat.
+
+
+There will be following parameters in sendOldReservationInformation route:
+1. space = {conference, cubicle, private office, hot seat, all} --> default will be all.
+3. status = {all, past, cancel, update} --> default will be active.
+4.1. sDate = startDate
+4.2. eDate = endDate         
+NOTE: By default the last 7 days will be shown.
+5. tNum = this will send information about a single unique reservation. Information about its transaction number, date, status, user related.
+6. uID = all reservations of this user. Active and past depends on the previous parameters.
+7. seatID = all reservations of a single seat.
+
+NOTE: I need to put some validator to check if the get request is correct. If the database answers with error there it should be based on the response.
+*/
+
+
+/*
+sendUserInformation -> This method which will respond to queries related to user will return the following information based on params:
+-> All users in the database.
+-> Users with active reservation currently.
+-> All the users who ever performed reservation.
+-> single user based on their ID.
+*/
+
 /**
  
 So, we have 6 tables with us: 4 are space tables, 1 common spaces table and 1 is reservation table.

@@ -3,7 +3,7 @@ const {
   sendAdminLogin,
   logoutAdmin,
   authenticateAdmin,
-  sendReservationInformation,
+  sendActiveReservationInformation,
   sendUserInformation,
   addUserViaAdmin,
   deleteUserViaAdmin,
@@ -12,42 +12,46 @@ const {
   cancelReservationViaAdmin,
   modifyReservationViaAdmin,
   modifySpaceTablesViaAdmin,
+  sendOldReservationInformation,
+  sendUserReservationInformation
 } = require("../controllers/adminController");
+const {checkUserDoesNotExist, runValidationUser, checkUserDoExist, verifyUserPassword, checkUserDoExistQueryParams} =  require("../middleware/validationMiddleware");
 const { updateCurrentAndAllReservationTable } = require("../database/reservationTablePopulateUtils");
 const { isAuthenticatedAdmin } = require("../middleware/authorization");
+
 const router = express.Router();
 
 router.route("/suman-kickstart").get(sendAdminLogin).post(authenticateAdmin);
 router.route("/logout").get(isAuthenticatedAdmin, logoutAdmin);
 
-// NOTE: http://localhost:4500/api/v1/admin/info/reservation?type=single&date=2023-02-02&space=conference%20cubicle&status=active  --> Example of the below route
-router
-  .route("/info/reservation")
-  .get(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, sendReservationInformation);
-// Single Reservation info
-// Multiple reservation info based on date and seat type filter.
-// All current active reservations.
-// Current active reservation based on space type.
-// All reservations of a particular user.
-// All active reservations of a particular user.
-// All reservations of a single seat.
-// All current reservations of a single seat.
-// A particular space type reservation based on different params like all reservation which are active of a current space type.
 
-router.route("/info/user").get(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, sendUserInformation);
+router
+  .route("/info/current/reservation")
+  .get(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, sendActiveReservationInformation);
+
+router
+.route("/info/old/reservation")
+.get(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, sendOldReservationInformation);
+
+router.route("/info/user/:userID").get(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, sendUserInformation);
+
+
+router.route('/user/reserve/:type').get(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, sendUserReservationInformation)
+
 // All user information
 // A single user information based on id.
-
+// checkUserDoesNotExist, runValidationUser,
 router
   .route("/modify/row/user")
-  .get(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, addUserViaAdmin)
-  .delete(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, deleteUserViaAdmin)
-  .patch(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, updateUserViaAdmin);
+  .post(isAuthenticatedAdmin, updateCurrentAndAllReservationTable,  checkUserDoesNotExist, runValidationUser, addUserViaAdmin)
+  .delete(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, checkUserDoExistQueryParams, deleteUserViaAdmin)
+  .patch(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, runValidationUser, checkUserDoExistQueryParams, updateUserViaAdmin);
 // CRUD user in the database
 
+// TODO: Get information about all the spaces available.
 router
   .route("/modify/row/reservation")
-  .get(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, makeReservationViaAdmin)
+  .post(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, makeReservationViaAdmin)
   .delete(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, cancelReservationViaAdmin)
   .patch(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, modifyReservationViaAdmin);
 // CRUD in the reservation table rows.

@@ -11,7 +11,6 @@ const {
 } = require("../database/databaseUserRequests");
 const sendToken = require("../utils/jwtSetup");
 const crypto = require("crypto");
-const validator = require("validator");
 const sendEmail = require("../utils/sendEmail");
 
 const getResetPasswordToken = (req) => {
@@ -40,7 +39,7 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
 });
 
 exports.loginUser = catchAsyncError(async (req, res, next) => {
-  return sendToken(req.user.userID, 200, res);
+  return sendToken(req.user[0], 200, res);
 });
 
 exports.logoutUser = catchAsyncError(async (req, res, next) => {

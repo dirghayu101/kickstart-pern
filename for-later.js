@@ -4,5 +4,9 @@
 
     The password in the update route will go through validation but it doesn't matter as it will be the password sent by the user to confirm their update request.
 
+    2. Admin update password functionality.
 
+    3. Email verification functionality.
  */
+
+    

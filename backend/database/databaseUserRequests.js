@@ -70,7 +70,7 @@ module.exports.updatePassword = async (userID, newPassword) => {
 
 module.exports.updateUserInformationRequest = async (req) => {
   const { firstName, lastName, phoneNumber, gender } = req.body;
-  const userID = req.user[0].userID;
+  const userID = req.query.id || req.user[0].userID 
   const updateScript = `UPDATE public."User"
 	SET  "phoneNumber"='${phoneNumber}', "firstName"='${firstName}', "lastName"='${lastName}', gender='${gender}'
 	WHERE "userID" = '${userID}'`;

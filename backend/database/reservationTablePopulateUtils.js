@@ -3,7 +3,7 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 
 const spaceAndSeatID = {
   "Conference-Room": 10000,
-  Cubicle: 20000,
+  "Cubicle": 20000,
   "Hot-Seat": 30000,
   "Private-Office": 40000,
 };
@@ -65,6 +65,10 @@ module.exports.cutColumnToSpecificSeats = async (spaceName, wantedSeats) => {
   await databaseConnection.query(updateTableQuery);
 };
 
+// 1. This should just insert successful reservations in the All-Reservation-Table.
+// 2. The failed reservations will be installed via a different function.
+// 3. The reservation status by default will be true here, which translates to success.
+// 4. The cancellation route will insert it as false.
 module.exports.updateCurrentAndAllReservationTable = catchAsyncError(
   async (req, res, next) => {
     const todayDate = new Date().toISOString().slice(0, 10);

@@ -1,5 +1,5 @@
 const validator = require('validator')
-const { findUser } = require('../database/databaseUserRequests')
+const { findUser, getUserByID } = require('../database/databaseUserRequests')
 const bcrypt = require('bcryptjs')
 const catchAsyncError = require('../middleware/catchAsyncError')
 const ErrorHandler = require("../utils/errorHandler")
@@ -85,4 +85,14 @@ module.exports.verifyUserPassword = catchAsyncError(async (req, res, next) => {
         return next()
     }
     return next(new ErrorHandler(`Email or Password is incorrect`, 401))
+})
+
+module.exports.checkUserDoExistQueryParams = catchAsyncError(async (req, res, next) => {
+    const userID = req.query.id
+    const user = await getUserByID(userID)
+    if(!user.length){      
+        return next(new ErrorHandler(`User does not exist.`, 400))
+    } 
+    req.user = user
+    return next()
 })
