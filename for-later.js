@@ -7,6 +7,8 @@
     2. Admin update password functionality.
 
     3. Email verification functionality.
+
+    4. Emergency mail or something regarding an issue. Or to raise a ticket.
  */
 
     

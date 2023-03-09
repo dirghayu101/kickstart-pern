@@ -48,3 +48,10 @@ module.exports.activeReservationHistory = catchAsyncError(async (req, res, next)
         message: "Request received at the active reservations of current user route."
     })  
 })
+
+module.exports.postReservationFeedback = catchAsyncError(async (req, res, next) => {
+    res.status(201).json({
+        success: true,
+        message: "Request received to post reservation feedback."
+    })
+})

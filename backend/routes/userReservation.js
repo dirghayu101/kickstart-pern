@@ -12,11 +12,14 @@ const {
   updateRelatedData,
   activeReservationHistory,
   allReservationHistory,
+  postReservationFeedback,
 } = require("../controllers/userReservationController");
-const { updateCurrentAndAllReservationTable } = require("../database/reservationTablePopulateUtils");
+const {
+  updateCurrentAndAllReservationTable,
+} = require("../database/reservationTablePopulateUtils");
 const router = express.Router();
 const { isAuthenticatedUser } = require("../middleware/authorization");
-const { handlePayment } = require("../middleware/payment");
+const { handlePayment, reservationExist } = require("../middleware/payment");
 
 // This route will show all the spaces available for the user to reserve from.
 router.route("/spaces").get(isAuthenticatedUser, sendSpacesAvailable);
@@ -35,19 +38,45 @@ router
 // 2. There might be a functionality where admin will approve the cancellation of a reservation, so post method will be much more handy to transfer all the information required
 router
   .route("/reserve/:transID")
-  .patch(isAuthenticatedUser, updateCurrentAndAllReservationTable, updateReservation)
-  .delete(isAuthenticatedUser, updateCurrentAndAllReservationTable, cancelReservation);
+  .patch(
+    isAuthenticatedUser,
+    updateCurrentAndAllReservationTable,
+    updateReservation
+  )
+  .delete(
+    isAuthenticatedUser,
+    updateCurrentAndAllReservationTable,
+    cancelReservation
+  );
 
 // This route will just send the data about all the seats available in nearby future that can be reserved and similar information.
 router
   .route("/reserve/updateAvail/:transID")
-  .get(isAuthenticatedUser, updateCurrentAndAllReservationTable, updateRelatedData);
+  .get(
+    isAuthenticatedUser,
+    updateCurrentAndAllReservationTable,
+    updateRelatedData
+  );
 
 // NOTE: A user should not be able to exploit this route and get the history of every user in the database.
 router
   .route("/reserve/history/all")
-  .get(isAuthenticatedUser, updateCurrentAndAllReservationTable,activeReservationHistory);
+  .get(
+    isAuthenticatedUser,
+    updateCurrentAndAllReservationTable,
+    activeReservationHistory
+  );
 
-router.route('/reserve/history/current').get(isAuthenticatedUser, updateCurrentAndAllReservationTable, allReservationHistory)
+router
+  .route("/reserve/history/current")
+  .get(
+    isAuthenticatedUser,
+    updateCurrentAndAllReservationTable,
+    allReservationHistory
+  );
+
+router
+  .route("/reserve/feedback")
+  .post(isAuthenticatedUser, reservationExist, postReservationFeedback);
 
 module.exports = router;
