@@ -48,5 +48,3 @@ router.route("/password/forgot").post(checkUserDoExist, forgotPassword);
 router.route("/password/reset/:token").put(forgotPasswordValidations, resetPassword)
 
 module.exports = router;
-
-module.exports = router
