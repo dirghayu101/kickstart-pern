@@ -3,7 +3,7 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 
 const spaceAndSeatID = {
   "Conference-Room": 10000,
-  "Cubicle": 20000,
+  Cubicle: 20000,
   "Hot-Seat": 30000,
   "Private-Office": 40000,
 };
@@ -71,13 +71,17 @@ module.exports.cutColumnToSpecificSeats = async (spaceName, wantedSeats) => {
 // 4. The cancellation route will insert it as false.
 module.exports.updateCurrentAndAllReservationTable = catchAsyncError(
   async (req, res, next) => {
-    const todayDate = new Date().toISOString().slice(0, 10);
-    const updateQuery = `INSERT INTO public."All-Reservation-Table"(
-      "userID", "seatID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted")
-      SELECT "userID", "seatID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted"
+    try {
+      const todayDate = new Date().toISOString().slice(0, 10);
+      const updateQuery = `INSERT INTO public."All-Reservation-Table"(
+      "userID", "seatID", "reservationID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted")
+      SELECT "userID", "seatID", "reservationID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted"
       FROM public."Current-Reservation-Table" WHERE DATE("reservationDate")<'${todayDate}';
       DELETE FROM public."Current-Reservation-Table" WHERE DATE("reservationDate")<'${todayDate}';`;
-    await databaseConnection.query(updateQuery);
-    return next();
+      await databaseConnection.query(updateQuery);
+      return next();
+    } catch (error) {
+      console.log(error);
+    }
   }
 );

@@ -7,7 +7,7 @@ const { insertUser, updateUserInformationRequest } = require("../database/databa
 
 const spaceAndSeatID = {
   "Conference-Room": 10000,
-  Cubicle: 20000,
+  "Cubicle": 20000,
   "Hot-Seat": 30000,
   "Private-Office": 40000,
 };
@@ -277,6 +277,7 @@ module.exports.modifyReservationViaAdmin = catchAsyncError(
 
 module.exports.modifySpaceTablesViaAdmin = catchAsyncError(
   async (req, res, next) => {
+    
     res.status(200).json({
       success: true,
       message: "Received your request in modify space table structure via admin route."

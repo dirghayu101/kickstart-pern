@@ -22,7 +22,7 @@ const { isAuthenticatedUser } = require("../middleware/authorization");
 const { handlePayment, reservationExist } = require("../middleware/payment");
 
 // This route will show all the spaces available for the user to reserve from.
-router.route("/spaces").get(isAuthenticatedUser, sendSpacesAvailable);
+router.route("/spaces/:date").get(isAuthenticatedUser, sendSpacesAvailable);
 
 // This will be a route in query params format.
 router.route("/space").get(isAuthenticatedUser, sendFilterSpace);
@@ -64,7 +64,7 @@ router
   .get(
     isAuthenticatedUser,
     updateCurrentAndAllReservationTable,
-    activeReservationHistory
+    allReservationHistory
   );
 
 router
@@ -72,7 +72,7 @@ router
   .get(
     isAuthenticatedUser,
     updateCurrentAndAllReservationTable,
-    allReservationHistory
+    activeReservationHistory
   );
 
 router

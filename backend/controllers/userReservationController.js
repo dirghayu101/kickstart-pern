@@ -1,24 +1,91 @@
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
-const databaseConnection = require("../database/connection")
+const databaseConnection = require("../database/connection");
+const { v1: generateReservationID } = require("uuid");
+const allSpaces = [
+  "Conference-Room",
+  "Cubicle",
+  "Hot-Seat",
+  "Private-Office",
+  "Conference-Room",
+];
 
-async function getSeatNumber(space, date){
-    const seatQuery = `SELECT "seatID" FROM public."${space}" WHERE "${space}"."reservationDates" IS NULL OR NOT '${date}' = ANY("${space}"."reservationDates");`
-    const {rows: seatArr} = await databaseConnection.query(seatQuery)
-    return seatArr[0]
+async function getSeatNumber(space, date) {
+  const seatQuery = `SELECT "seatID" FROM public."${space}" WHERE "${space}"."reservationDates" IS NULL OR NOT '${date}' = ANY("${space}"."reservationDates");`;
+  const { rows: seatArr } = await databaseConnection.query(seatQuery);
+  return seatArr[0];
 }
 
-module.exports.sendSpacesAvailable = catchAsyncError(async (req, res, next) => {
-    res.status(201).json({
-        message: "Request received at the send spaces available route."
+/*
+Alternate way for the "getAllSeatsForDate" function:
+    async function getAllSeatsForDate(date) {
+    let seatObject = []
+    for (const space of allSpaces) {
+        const seatQuery = `SELECT "seatID" FROM public."${space}" WHERE "${space}"."reservationDates" IS NULL OR NOT '${date}' = ANY("${space}"."reservationDates");`
+        const { rows: seatArr } = await databaseConnection.query(seatQuery)
+        const seatObj = {}
+        seatObj[space] = seatArr.length
+        seatObject.push(seatObj)
+    }
+    return seatObject
+    }
+
+This is using for of loop. 
+
+ Promise.all() and async/await with a for...of loop both allow you to execute multiple asynchronous operations in parallel, there are some important differences between the two approaches. For example, Promise.all() will reject if any of the given promises reject, whereas async/await with a for...of loop will continue to execute the remaining iterations even if one of the asynchronous operations fails. Therefore, it's important to choose the approach that best suits your specific use case.
+*/
+
+async function getAllSeatsForDate(date) {
+  let seatObject = [];
+  await Promise.all(
+    allSpaces.map(async (space) => {
+      const seatQuery = `SELECT "seatID" FROM public."${space}" WHERE "${space}"."reservationDates" IS NULL OR NOT '${date}' = ANY("${space}"."reservationDates");`;
+      const { rows: seatArr } = await databaseConnection.query(seatQuery);
+      const seatObj = {};
+      seatObj[space] = seatArr.length;
+      seatObject.push(seatObj);
     })
-})
+  );
+  return seatObject;
+}
+
+async function insertInCurrentReservationTable(userID, seat, transID, date) {
+  const reservationID = generateReservationID();
+  const insertScript = `INSERT INTO public."Current-Reservation-Table"(
+        "userID", "seatID", "reservationID", "transactionNumber", "reservationDate")
+        VALUES ('${userID}', '${seat}', '${reservationID}', '${transID}', '${date}');`;
+  await databaseConnection.query(insertScript);
+}
+
+async function makeReservation(space, date, userID, transID) {
+  try {
+    const { seatID: seat } = await getSeatNumber(space, date);
+    await insertInCurrentReservationTable(userID, seat, transID, date);
+    const reserveSeatQuery = `UPDATE public."${space}"
+	SET "reservationDates" = array_append("reservationDates", '${date}'), "reservedUserID" = array_append("reservedUserID", '${userID}'),
+	"bookingTime" = now()
+	WHERE "seatID"='${seat}';`;
+    return await databaseConnection.query(reserveSeatQuery);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// This query will have a date as its parameter.
+module.exports.sendSpacesAvailable = catchAsyncError(async (req, res, next) => {
+  let date = req.params.date;
+  let resObj = await getAllSeatsForDate(date);
+  res.status(201).json({
+    message: "Request received at the send spaces available route.",
+    response: resObj,
+  });
+});
 
 module.exports.sendFilterSpace = catchAsyncError(async (req, res, next) => {
-    res.status(201).json({
-        message: "Request received at the filter space route."
-    })
-})
+  res.status(201).json({
+    message: "Request received at the filter space route.",
+  });
+});
 
 /*
 The req.body will have the following parameters:
@@ -42,60 +109,96 @@ The spaceType value should be:
 4. Private-Office
 
 One problem in this arrangement that I can see is, let's say a user has booked two seats for different dates, the table should get updated before the user makes another query to the database otherwise it may lead to some anomalies. 
+-> The above problem has been fixed using for of loop.
 
 What is the use of isBookedBoolean if we are selecting the rows based on the dates they are available on?
 */
 
-module.exports.userMakeReservation = catchAsyncError(async (req, res, next) => {
-    const {userID, reservation} = req.body
-    const reservationObj = Object.keys(reservation)
-    reservationObj.forEach(async (space) => {
-        const dates = reservation[space]
-        dates.forEach(async (date) => {
-            const seatID = await getSeatNumber(space, date)
-            console.log(seatID)
-        })
+/*
+    module.exports.userMakeReservation = catchAsyncError(async (req, res, next) => {
+        const {userID, reservation} = req.body
+        const reservationObj = Object.keys(reservation)
+        reservationObj.forEach(async (space) => {
+            const dates = reservation[space]
+            dates.forEach(async (date) => {
+                const result = await makeReservation(space, date)
 
+            })
+
+        })
+        res.status(201).json({
+            message: "Request received at the make reservation route."
+        })
     })
-    res.status(201).json({
-        message: "Request received at the make reservation route."
-    })
-})
+*/
+
+module.exports.userMakeReservation = catchAsyncError(async (req, res, next) => {
+  const {reservation, transID } = req.body;
+  const {userID} = req.user[0]
+  const reservationObj = Object.keys(reservation);
+  for (const space of reservationObj) {
+    const dates = reservation[space];
+    for (const date of dates) {
+      const result = await makeReservation(space, date, userID, transID);
+    }
+  }
+  res.status(201).json({
+    message: "Reservations made successfully.",
+  });
+});
 
 module.exports.cancelReservation = catchAsyncError(async (req, res, next) => {
-    res.status(201).json({
-        message: "Request received at the cancel reservation route."
-    })
-})
+  res.status(201).json({
+    message: "Request received at the cancel reservation route.",
+  });
+});
 
 module.exports.updateReservation = catchAsyncError(async (req, res, next) => {
-    res.status(201).json({
-        message: "Request received at the update reservation route."
-    })
-})
+  res.status(201).json({
+    message: "Request received at the update reservation route.",
+  });
+});
 
 module.exports.updateRelatedData = catchAsyncError(async (req, res, next) => {
-    res.status(201).json({
-        message: "Request received at the route which will be used to send spaces available in the future."
-    })
-})
+  res.status(201).json({
+    message:
+      "Request received at the route which will be used to send spaces available in the future.",
+  });
+});
 
-module.exports.allReservationHistory = catchAsyncError(async (req, res, next) => {
+module.exports.allReservationHistory = catchAsyncError(
+  async (req, res, next) => {
+    const {userID} = req.user[0]
+    const allReservationScript = `SELECT "transactionNumber", "userID", "seatID", "reservationID", "wasMuted", "reservationDate", "bookingTime", "reservationStatus"
+    FROM public."All-Reservation-Table" WHERE "userID" = '${userID}'`;
+    const {rows: allReservationHistory} = await databaseConnection.query(allReservationScript);
     res.status(201).json({
-        message: "Request received at the get current user's reservation history route."
-    })
-})
+      message:
+        "Request received at the get current user's reservation history route.",
+      allReservationHistory
+    });
+  }
+);
 
-module.exports.activeReservationHistory = catchAsyncError(async (req, res, next) => {
+module.exports.activeReservationHistory = catchAsyncError(
+  async (req, res, next) => {
+    const {userID} = req.user[0]
+    const activeReservationScript = `SELECT "userID", "seatID", "reservationID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted"
+    FROM public."Current-Reservation-Table" WHERE "userID" = '${userID}'`
+    const {rows: activeReservationHistory} = await databaseConnection.query(activeReservationScript);
     res.status(201).json({
-        message: "Request received at the active reservations of current user route."
-    })  
-})
+      message:
+        "Request received at the active reservations of current user route.",
+        activeReservationHistory
+    });
+  }
+);
 
-module.exports.postReservationFeedback = catchAsyncError(async (req, res, next) => {
+module.exports.postReservationFeedback = catchAsyncError(
+  async (req, res, next) => {
     res.status(201).json({
-        success: true,
-        message: "Request received to post reservation feedback."
-    })
-})
-
+      success: true,
+      message: "Request received to post reservation feedback.",
+    });
+  }
+);
