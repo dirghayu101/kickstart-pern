@@ -2,6 +2,8 @@ const { getUserByID } = require("../database/databaseUserRequests")
 const ErrorHandler = require("../utils/errorHandler")
 const catchAsyncError = require("./catchAsyncError")
 const jwt = require("jsonwebtoken")
+const databaseConnection = require("../database/connection");
+const moment = require('moment')
 
 exports.isAuthenticatedUser = catchAsyncError(async (req, res, next) => {
     const {token} = req.cookies
@@ -27,4 +29,40 @@ exports.isAuthenticatedAdmin = catchAsyncError(async (req, res, next) => {
         return next()
     }
     return next(new ErrorHandler("Resources doesn't exist or the request is unauthorized.", 401))
+})
+
+function getCurrentTimestamp(){
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // add leading zero if necessary
+    const day = ('0' + currentDate.getDate()).slice(-2); // add leading zero if necessary
+    const hours = ('0' + currentDate.getHours()).slice(-2); // add leading zero if necessary
+    const minutes = ('0' + currentDate.getMinutes()).slice(-2); // add leading zero if necessary
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+function dateInvalid(rows){
+    const date = moment(rows[0].reservationDate).format('YYYY-MM-DD') + ' 00:00'
+    const rowTimeStamp = (new Date(date).getTime())/3600000;
+    const currentTimeStamp = (new Date(getCurrentTimestamp()).getTime())/ 3600000;
+    let difference = rowTimeStamp - currentTimeStamp
+    if(difference >= 12){
+        return false
+    } else{
+        return true
+    }
+}
+
+exports.cancelValidations = catchAsyncError(async (req, res, next) => {
+    const {transID, seatID} = req.query
+    const {rows} = await databaseConnection.query(`SELECT "userID", "seatID", "reservationID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted"
+	FROM public."Current-Reservation-Table" WHERE "transactionNumber"='${transID}' AND "seatID"='${seatID}'`)
+    if(!rows.length){
+        return next(new ErrorHandler("Invalid action, reservation doesn't exist.", 400))
+    }
+    if(dateInvalid(rows)){
+        return next(new ErrorHandler("You can only cancel your reservation 12 hours prior. Contact the owner."))
+    } 
+    req.reservationInfo = rows
+    next()
 })

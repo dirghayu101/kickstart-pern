@@ -13,7 +13,8 @@ const {
   modifyReservationViaAdmin,
   modifySpaceTablesViaAdmin,
   sendOldReservationInformation,
-  sendUserReservationInformation
+  sendUserReservationInformation,
+  getAllFeedback
 } = require("../controllers/adminController");
 const {checkUserDoesNotExist, runValidationUser, checkUserDoExist, verifyUserPassword, checkUserDoExistQueryParams} =  require("../middleware/validationMiddleware");
 const { updateCurrentAndAllReservationTable } = require("../database/reservationTablePopulateUtils");
@@ -60,5 +61,7 @@ router.route("/modify/db/reservation").patch(isAuthenticatedAdmin,updateCurrentA
 // Modify the tables
 // Add more rows based on space type.
 // Delete space table rows.
+
+router.route("/reservation/feedbacks").get(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, getAllFeedback)
 
 module.exports = router;

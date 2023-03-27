@@ -2,6 +2,7 @@ const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const databaseConnection = require("../database/connection");
 const { v1: generateReservationID } = require("uuid");
+const moment = require('moment-timezone')
 const allSpaces = [
   "Conference-Room",
   "Cubicle",
@@ -133,8 +134,8 @@ What is the use of isBookedBoolean if we are selecting the rows based on the dat
 */
 
 module.exports.userMakeReservation = catchAsyncError(async (req, res, next) => {
-  const {reservation, transID } = req.body;
-  const {userID} = req.user[0]
+  const { reservation, transID } = req.body;
+  const { userID } = req.user[0];
   const reservationObj = Object.keys(reservation);
   for (const space of reservationObj) {
     const dates = reservation[space];
@@ -148,8 +149,17 @@ module.exports.userMakeReservation = catchAsyncError(async (req, res, next) => {
 });
 
 module.exports.cancelReservation = catchAsyncError(async (req, res, next) => {
+  const {transactionNumber, userID, seatID, reservationID, wasMuted} = req.reservationInfo[0]
+  const reservationDate = moment(req.reservationInfo[0].reservationDate).format('YYYY-MM-DD')
+  const bookingTime = moment.utc(req.reservationInfo[0].bookingTime).tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss')
+  const insertScript = `INSERT INTO public."All-Reservation-Table"(
+    "transactionNumber", "userID", "seatID", "reservationID", "wasMuted", "reservationDate", "bookingTime", "reservationStatus")
+    VALUES ('${transactionNumber}', '${userID}', '${seatID}', '${reservationID}', '${wasMuted}', '${reservationDate}', '${bookingTime}', false);`
+  await databaseConnection.query(insertScript)
+  const deleteScript = `DELETE FROM public."Current-Reservation-Table" WHERE "transactionNumber"='${transactionNumber}' AND "seatID"='${seatID}'`
+  await databaseConnection.query(deleteScript)
   res.status(201).json({
-    message: "Request received at the cancel reservation route.",
+    message: "We are processing your cancellation, you will receive your refund in 5-7 business days.",
   });
 });
 
@@ -168,37 +178,48 @@ module.exports.updateRelatedData = catchAsyncError(async (req, res, next) => {
 
 module.exports.allReservationHistory = catchAsyncError(
   async (req, res, next) => {
-    const {userID} = req.user[0]
+    const { userID } = req.user[0];
     const allReservationScript = `SELECT "transactionNumber", "userID", "seatID", "reservationID", "wasMuted", "reservationDate", "bookingTime", "reservationStatus"
     FROM public."All-Reservation-Table" WHERE "userID" = '${userID}'`;
-    const {rows: allReservationHistory} = await databaseConnection.query(allReservationScript);
+    const { rows: allReservationHistory } = await databaseConnection.query(
+      allReservationScript
+    );
     res.status(201).json({
       message:
         "Request received at the get current user's reservation history route.",
-      allReservationHistory
+      allReservationHistory,
     });
   }
 );
 
 module.exports.activeReservationHistory = catchAsyncError(
   async (req, res, next) => {
-    const {userID} = req.user[0]
+    const { userID } = req.user[0];
     const activeReservationScript = `SELECT "userID", "seatID", "reservationID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted"
-    FROM public."Current-Reservation-Table" WHERE "userID" = '${userID}'`
-    const {rows: activeReservationHistory} = await databaseConnection.query(activeReservationScript);
+    FROM public."Current-Reservation-Table" WHERE "userID" = '${userID}'`;
+    const { rows: activeReservationHistory } = await databaseConnection.query(
+      activeReservationScript
+    );
     res.status(201).json({
       message:
         "Request received at the active reservations of current user route.",
-        activeReservationHistory
+      activeReservationHistory,
     });
   }
 );
 
 module.exports.postReservationFeedback = catchAsyncError(
   async (req, res, next) => {
+    const { seatNum, rating, comment } = req.body;
+    const { userID } = req.user[0];
+    const insertScript = `INSERT INTO public."Reservation-Feedback"(
+      "userID", "seatNum", rating, comment)
+      VALUES ('${userID}', '${seatNum}', ${rating}, '${comment}');`;
+    console.log(insertScript);
+    await databaseConnection.query(insertScript);
     res.status(201).json({
       success: true,
-      message: "Request received to post reservation feedback.",
+      message: "Your response has been received successfully!.",
     });
   }
 );

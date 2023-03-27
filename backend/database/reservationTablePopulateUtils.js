@@ -1,5 +1,6 @@
 const databaseConnection = require("./connection");
 const catchAsyncError = require("../middleware/catchAsyncError");
+const moment = require('moment')
 
 const spaceAndSeatID = {
   "Conference-Room": 10000,
@@ -65,6 +66,49 @@ module.exports.cutColumnToSpecificSeats = async (spaceName, wantedSeats) => {
   await databaseConnection.query(updateTableQuery);
 };
 
+function getSpaceType(seatID){
+  if(seatID >= 10000 && seatID < 20000){
+    return "Conference-Room"
+  } else if(seatID >= 20000 && seatID < 30000){
+    return "Cubicle"
+  } else if(seatID >= 30000 && seatID < 40000){
+    return "Hot-Seat"
+  } else{
+    return "Private-Office"
+  }
+}
+
+
+async function updateSpaceTable(todayDate){
+  // TODO: Change DATE("reservationDate")<='${todayDate}' to DATE("reservationDate")<'${todayDate}'
+  const toInsertTuplesScript = `SELECT "userID", "seatID", "reservationDate"
+  FROM public."Current-Reservation-Table" WHERE DATE("reservationDate")<='${todayDate}'`
+  const {rows:tuples} = await databaseConnection.query(toInsertTuplesScript)
+  for(const tuple of tuples){
+    let {userID, seatID, reservationDate} = tuple
+    const space = getSpaceType(seatID)
+    const getSeat = `SELECT "reservedUserID", "reservationDates" FROM public."${space}" WHERE "seatID"='${seatID}'`
+    const {rows} = await databaseConnection.query(getSeat)
+    const currentValue = rows[0]
+    currentValue.reservedUserID.splice(currentValue.reservedUserID.indexOf(userID), 1)
+    currentValue.reservationDates.splice(currentValue.reservationDates.indexOf(reservationDate), 1)
+
+    const updateScript = `UPDATE public."${space}" SET "reservationDates" = ARRAY[${currentValue.reservedUserID}] WHERE "seatID"='${seatID}'`
+
+
+  }
+  /*
+  for(const tuple of tuples){
+    const space = getSpaceType(tuple.seatID)
+    const date = moment(tuple.reservationDate).format('YYYY-MM-DD')
+    const updateScript = `UPDATE public."${space}"
+    SET "reservedUserID"=array_remove("reservedUserID", '${tuple.userID}'), "reservationDates"=array_remove("reservationDates", '${date}')
+    WHERE "seatID"='${tuple.seatID}'  AND array_position("reservedUserID", '${tuple.userID}') = 1 AND array_position("reservationDates", '${date}') = 1;`
+    console.log(updateScript)
+  }*/
+  return
+}
+
 // 1. This should just insert successful reservations in the All-Reservation-Table.
 // 2. The failed reservations will be installed via a different function.
 // 3. The reservation status by default will be true here, which translates to success.
@@ -73,6 +117,7 @@ module.exports.updateCurrentAndAllReservationTable = catchAsyncError(
   async (req, res, next) => {
     try {
       const todayDate = new Date().toISOString().slice(0, 10);
+      await updateSpaceTable(todayDate)
       const updateQuery = `INSERT INTO public."All-Reservation-Table"(
       "userID", "seatID", "reservationID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted")
       SELECT "userID", "seatID", "reservationID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted"

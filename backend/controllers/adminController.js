@@ -295,3 +295,12 @@ module.exports.logoutAdmin = catchAsyncError(async (req, res, next) => {
     message: `Logged out successfully!`,
   });
 });
+
+module.exports.getAllFeedback = catchAsyncError(async (req, res, next) => {
+  const result = await databaseConnection.query(`SELECT "userID", "seatNum", rating, comment, "time"
+	FROM public."Reservation-Feedback"`)
+  res.status(200).json({
+    success: true,
+    feedback: result
+  });
+})

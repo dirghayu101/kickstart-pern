@@ -18,8 +18,11 @@ const {
   updateCurrentAndAllReservationTable,
 } = require("../database/reservationTablePopulateUtils");
 const router = express.Router();
-const { isAuthenticatedUser } = require("../middleware/authorization");
-const { handlePayment, reservationExist } = require("../middleware/payment");
+const {
+  isAuthenticatedUser,
+  cancelValidations,
+} = require("../middleware/authorization");
+const { handlePayment } = require("../middleware/payment");
 
 // This route will show all the spaces available for the user to reserve from.
 router.route("/spaces/:date").get(isAuthenticatedUser, sendSpacesAvailable);
@@ -42,10 +45,14 @@ router
     isAuthenticatedUser,
     updateCurrentAndAllReservationTable,
     updateReservation
-  )
+  );
+
+router
+  .route("/reserve/cancel")
   .delete(
     isAuthenticatedUser,
     updateCurrentAndAllReservationTable,
+    cancelValidations,
     cancelReservation
   );
 
@@ -77,6 +84,6 @@ router
 
 router
   .route("/reserve/feedback")
-  .post(isAuthenticatedUser, reservationExist, postReservationFeedback);
+  .post(isAuthenticatedUser, postReservationFeedback);
 
 module.exports = router;
