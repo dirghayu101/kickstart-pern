@@ -9,8 +9,6 @@ CREATE TABLE IF NOT EXISTS public."Admin"
 )
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."Admin" OWNER to postgres;
-
 DELETE FROM public."Admin";
 
 INSERT INTO public."Admin"(
@@ -32,9 +30,6 @@ CREATE TABLE IF NOT EXISTS public."User"
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."User"
-    OWNER to postgres;
-
 CREATE TABLE IF NOT EXISTS public."Current-Reservation-Table"
 (
     "userID" character varying COLLATE pg_catalog."default" NOT NULL,
@@ -44,14 +39,10 @@ CREATE TABLE IF NOT EXISTS public."Current-Reservation-Table"
     "bookingTime" timestamp without time zone NOT NULL DEFAULT 'now()',
     "reservationDate" date NOT NULL,
     "wasMuted" boolean NOT NULL DEFAULT 'false',
-    CONSTRAINT "Current-Reservation-Table_pkey" PRIMARY KEY ("reservationID"),
-    CONSTRAINT "Present-Future-Time-Constraint" CHECK ("reservationDate" >= CURRENT_DATE) NOT VALID
+    CONSTRAINT "Current-Reservation-Table_pkey" PRIMARY KEY ("reservationID")
 )
 
 TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."Current-Reservation-Table"
-    OWNER to postgres;
 
 CREATE TABLE IF NOT EXISTS public."All-Reservation-Table"
 (
@@ -66,9 +57,6 @@ CREATE TABLE IF NOT EXISTS public."All-Reservation-Table"
     CONSTRAINT "All-Reservation-Table_pkey" PRIMARY KEY ("reservationID")
 )
 TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."All-Reservation-Table"
-    OWNER to postgres;
     
 CREATE TABLE IF NOT EXISTS public."Conference-Room"
 (
@@ -83,9 +71,6 @@ CREATE TABLE IF NOT EXISTS public."Conference-Room"
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."Conference-Room"
-    OWNER to postgres;
-
 CREATE TABLE IF NOT EXISTS public."Cubicle"
 (
     "seatID" character varying COLLATE pg_catalog."default" NOT NULL,
@@ -98,9 +83,6 @@ CREATE TABLE IF NOT EXISTS public."Cubicle"
 )
 
 TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."Cubicle"
-    OWNER to postgres;
 
 CREATE TABLE IF NOT EXISTS public."Hot-Seat"
 (
@@ -115,9 +97,6 @@ CREATE TABLE IF NOT EXISTS public."Hot-Seat"
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."Hot-Seat"
-    OWNER to postgres;
-
 CREATE TABLE IF NOT EXISTS public."Private-Office"
 (
     "seatID" character varying COLLATE pg_catalog."default" NOT NULL,
@@ -131,9 +110,6 @@ CREATE TABLE IF NOT EXISTS public."Private-Office"
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."Private-Office"
-    OWNER to postgres;
-
 CREATE TABLE IF NOT EXISTS public."Reservation-Feedback"
 (
     "userID" character varying COLLATE pg_catalog."default",
@@ -144,9 +120,6 @@ CREATE TABLE IF NOT EXISTS public."Reservation-Feedback"
 )
 
 TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."Reservation-Feedback"
-    OWNER to postgres;
 
 CREATE TABLE IF NOT EXISTS public."Reset-Password"
 (
@@ -162,27 +135,24 @@ CREATE TABLE IF NOT EXISTS public."Reset-Password"
 )
 
 TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."Reset-Password"
-    OWNER to postgres;
 `;
 
-const checkScript = `SELECT * FROM pg_database WHERE datname = 'Kickstart-MERN-Database'`;
+// const checkScript = `SELECT * FROM pg_database WHERE datname = 'Kickstart-MERN-Database'`;
 
-const createDBScript = `CREATE DATABASE "Kickstart-MERN-Database"
-WITH
-OWNER = postgres
-ENCODING = 'UTF8'
-LC_COLLATE = 'C'
-LC_CTYPE = 'C'
-TABLESPACE = pg_default
-CONNECTION LIMIT = -1
-IS_TEMPLATE = False;`;
+// const createDBScript = `CREATE DATABASE "Kickstart-MERN-Database"
+// WITH
+// OWNER = postgres
+// ENCODING = 'UTF8'
+// LC_COLLATE = 'C'
+// LC_CTYPE = 'C'
+// TABLESPACE = pg_default
+// CONNECTION LIMIT = -1
+// IS_TEMPLATE = False;`;
 
 module.exports.initializeDatabase = async () => {
-  const { rows: result } = await databaseConnection.query(checkScript);
-  if (!result.length) {
-    await databaseConnection.query(createDBScript)
-  }
+//   const { rows: result } = await databaseConnection.query(checkScript);
+//   if (!result.length) {
+//     await databaseConnection.query(createDBScript)
+//   }
   await databaseConnection.query(queryString);
 };

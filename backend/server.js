@@ -7,7 +7,7 @@ dotenv.config({ path: __dirname + "/config.env" });
 
 const databaseConnection = require("./database/connection");
 const { getAllRowsOfSpace, addSeatsToSpace, cutColumnToSpecificSeats } = require("./database/reservationTablePopulateUtils");
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 4500;
 
 // Handling Uncaught Exception
 process.on("uncaughtException", (err) => {
@@ -29,11 +29,25 @@ const deleteTestRows = async () => {
   await cutColumnToSpecificSeats('Cubicle', 0)
   await cutColumnToSpecificSeats('Conference-Room', 0)
 }
- 
+
+const rowsExistInSpace = async () => {
+  const script = `SELECT * from public."Private-Office"`
+  const {rows: result} = await databaseConnection.query(script)
+  if(!result.length){
+    return true
+  } else{
+    return false
+  }
+}
+
 const start = async () => {
   try {
     await databaseConnection.connect();
-    // await initializeDatabase();
+    await initializeDatabase();
+    if(await rowsExistInSpace()){
+      await deleteTestRows()
+      await insertTestRows()
+    }
     console.log(`Database connected successfully!`);
     app.listen(PORT, () => {
       console.log(`Server is listening on http://localhost:${PORT}`);
