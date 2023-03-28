@@ -1,8 +1,11 @@
 const app = require("./app");
 const dotenv = require("dotenv");
+const {initializeDatabase} = require('./database/initialiseScript')
 // Configuration of package dotenv to initialize all the variables stored in the file.
+
 dotenv.config({ path: __dirname + "/config.env" });
-const connectDatabase = require("./database/connection");
+
+const databaseConnection = require("./database/connection");
 const { getAllRowsOfSpace, addSeatsToSpace, cutColumnToSpecificSeats } = require("./database/reservationTablePopulateUtils");
 const PORT = process.env.PORT;
 
@@ -29,7 +32,8 @@ const deleteTestRows = async () => {
  
 const start = async () => {
   try {
-    await connectDatabase.connect();
+    await databaseConnection.connect();
+    // await initializeDatabase();
     console.log(`Database connected successfully!`);
     app.listen(PORT, () => {
       console.log(`Server is listening on http://localhost:${PORT}`);
