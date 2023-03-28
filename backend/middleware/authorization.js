@@ -54,14 +54,14 @@ function dateInvalid(rows){
 }
 
 exports.cancelValidations = catchAsyncError(async (req, res, next) => {
-    const {transID, seatID} = req.query
+    const rNum = req.params.rNum
     const {rows} = await databaseConnection.query(`SELECT "userID", "seatID", "reservationID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted"
-	FROM public."Current-Reservation-Table" WHERE "transactionNumber"='${transID}' AND "seatID"='${seatID}'`)
+	FROM public."Current-Reservation-Table" WHERE "reservationID"='${rNum}'`)
     if(!rows.length){
         return next(new ErrorHandler("Invalid action, reservation doesn't exist.", 400))
     }
     if(dateInvalid(rows)){
-        return next(new ErrorHandler("You can only cancel your reservation 12 hours prior. Contact the owner."))
+        return next(new ErrorHandler("You can only update or cancel your reservation 12 hours prior. Contact the owner."))
     } 
     req.reservationInfo = rows
     next()

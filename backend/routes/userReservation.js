@@ -9,7 +9,6 @@ const {
   userMakeReservation,
   cancelReservation,
   updateReservation,
-  updateRelatedData,
   activeReservationHistory,
   allReservationHistory,
   postReservationFeedback,
@@ -21,6 +20,7 @@ const router = express.Router();
 const {
   isAuthenticatedUser,
   cancelValidations,
+  validateUpdateRequest
 } = require("../middleware/authorization");
 const { handlePayment } = require("../middleware/payment");
 
@@ -40,30 +40,19 @@ router
 // 1. Delete method shouldn't have any body.
 // 2. There might be a functionality where admin will approve the cancellation of a reservation, so post method will be much more handy to transfer all the information required
 router
-  .route("/reserve/:transID")
-  .patch(
+  .route("/reserve/:rNum")
+  .post(
     isAuthenticatedUser,
     updateCurrentAndAllReservationTable,
+    cancelValidations,
     updateReservation
-  );
-
-router
-  .route("/reserve/cancel")
-  .delete(
+  ).delete(
     isAuthenticatedUser,
     updateCurrentAndAllReservationTable,
     cancelValidations,
     cancelReservation
-  );
+  )
 
-// This route will just send the data about all the seats available in nearby future that can be reserved and similar information.
-router
-  .route("/reserve/updateAvail/:transID")
-  .get(
-    isAuthenticatedUser,
-    updateCurrentAndAllReservationTable,
-    updateRelatedData
-  );
 
 // NOTE: A user should not be able to exploit this route and get the history of every user in the database.
 router

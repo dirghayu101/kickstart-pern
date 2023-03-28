@@ -156,7 +156,7 @@ module.exports.cancelReservation = catchAsyncError(async (req, res, next) => {
     "transactionNumber", "userID", "seatID", "reservationID", "wasMuted", "reservationDate", "bookingTime", "reservationStatus")
     VALUES ('${transactionNumber}', '${userID}', '${seatID}', '${reservationID}', '${wasMuted}', '${reservationDate}', '${bookingTime}', false);`
   await databaseConnection.query(insertScript)
-  const deleteScript = `DELETE FROM public."Current-Reservation-Table" WHERE "transactionNumber"='${transactionNumber}' AND "seatID"='${seatID}'`
+  const deleteScript = `DELETE FROM public."Current-Reservation-Table" WHERE "reservationID" = '${reservationID}'`
   await databaseConnection.query(deleteScript)
   res.status(201).json({
     message: "We are processing your cancellation, you will receive your refund in 5-7 business days.",
@@ -164,15 +164,19 @@ module.exports.cancelReservation = catchAsyncError(async (req, res, next) => {
 });
 
 module.exports.updateReservation = catchAsyncError(async (req, res, next) => {
+  const {seatID, wasMuted, reservationID} = req.reservationInfo[0]
+  if(wasMuted){
+    return next(new ErrorHandler('You cannot update more than once.', 401))
+  }
+  const {newDate} = req.body
+  const space =  getSpaceType(seatID)
+  const {seatID:seatNum} = await getSeatNumber(space, newDate)
+  const updateScript = `UPDATE public."Current-Reservation-Table"
+	SET "seatID"='${seatNum}', "reservationDate"='${newDate}', "wasMuted"=true
+	WHERE "reservationID"='${reservationID}';`
+  await databaseConnection.query(updateScript)
   res.status(201).json({
     message: "Request received at the update reservation route.",
-  });
-});
-
-module.exports.updateRelatedData = catchAsyncError(async (req, res, next) => {
-  res.status(201).json({
-    message:
-      "Request received at the route which will be used to send spaces available in the future.",
   });
 });
 
@@ -223,3 +227,15 @@ module.exports.postReservationFeedback = catchAsyncError(
     });
   }
 );
+
+function getSpaceType(seatID){
+  if(seatID >= 10000 && seatID < 20000){
+    return "Conference-Room"
+  } else if(seatID >= 20000 && seatID < 30000){
+    return "Cubicle"
+  } else if(seatID >= 30000 && seatID < 40000){
+    return "Hot-Seat"
+  } else{
+    return "Private-Office"
+  }
+}
