@@ -9,10 +9,14 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HeroSection from './components/Hero/HeroSection.js';
 import Footer from './components/Footer/Footer.js';
 import Slider from './components/Reviews/Slider.js';
+//  import Login from './components/Login/Login.js';
+// import Signup from './components/Signup/Signup.js';
+
 
 function App() {
   return (
-    
+    // <Signup/>
+    //  <Login/> Include these two for sign up and login
     <>
       <Router>
         <Navbar />
@@ -26,7 +30,7 @@ function App() {
         <Route path='/about' element={<About />} />
         <Route path='/spaces' element={Spaces} />
         <Route path='/contact' element={<Contact />} />
-        <Route path='/signup' element={<Signup />} />
+        <Route path='/sign-up' element={<Signup />} />
         </Routes> */}
         <Footer />
       </Router>
