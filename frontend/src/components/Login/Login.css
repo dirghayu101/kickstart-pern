@@ -5,7 +5,7 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
-body{
+.body-loginPage{
   margin: 0;
   padding: 0;
   background-image: url('./frontend/public/images/2.jpg');

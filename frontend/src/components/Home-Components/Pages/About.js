@@ -1,9 +1,10 @@
 import React from 'react';
-import '../../App.css';
+import {useRef} from 'react';
+import './App.css'
 
 const About = () => {
   return (
-    <div class='about'>
+    <div class='about' id="about">
       <div class="about-content">
       <h2>About Us</h2>
       <p>Looking for the most flexible way to get back to work away from your home office?

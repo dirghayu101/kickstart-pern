@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../Buttons/Button.js';
 import "./Navbar.css"
 import {Link} from "react-router-dom";
+import {HashLink} from "react-router-hash-link"
 
 const Navbar = () => {
   const [click, setClick] = useState(false);
@@ -39,40 +40,40 @@ const Navbar = () => {
     <>
     <nav className={navbar ? 'navbar active' : 'navbar'}>
       <div className='navbar-container'>
-        <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
+        <HashLink smooth to='/#home' className='navbar-logo' onClick={closeMobileMenu}>
         <span className="styleBrand"> K</span>ick<span className="styleBrand">S</span>tart
          &nbsp; <span className="styleBrand"> W</span>ork<span className="styleBrand">H</span>ubs
-        </Link>
+        </HashLink>
         <div className='menu-icon' onClick={handleClick}>
           <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
         </div>
         <ul className={click ? 'nav-menu active' : 'nav-menu'}>
           <li className='nav-item'>
-            <Link to='/' className='nav-links' onClick={closeMobileMenu}>
+            <HashLink smooth to='/#home' className='nav-links' onClick={closeMobileMenu}>
               Home
-            </Link>
+            </HashLink>
           </li>
           <li className='nav-item'>
-            <Link
-              to='/about'
+            <HashLink
+              smooth to='#about'
               className='nav-links'
               onClick={closeMobileMenu}
             >
               About
-            </Link>
+            </HashLink>
           </li>
           <li className='nav-item'>
-            <Link
-              to='/spaces'
+            <HashLink
+              to='/#plans'
               className='nav-links'
               onClick={closeMobileMenu}
             >
               Our Plans
-            </Link>
+            </HashLink>
           </li>
           <li className='nav-item'>
             <Link
-              to='/contact'
+              to='/login'
               className='nav-links'
               onClick={closeMobileMenu}
             >

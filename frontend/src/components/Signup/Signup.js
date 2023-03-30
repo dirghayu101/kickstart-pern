@@ -3,7 +3,7 @@ import './Signup.css';
 
 const Signup = () => {
     return(
-        
+        <body class="body-signUp">
     <div class="container">
       <div class="title">Registration</div>
       <div class="content">
@@ -112,7 +112,7 @@ const Signup = () => {
         </form>
       </div>
     </div>
-    
+    </body>
     )
 }
 

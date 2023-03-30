@@ -1,7 +1,6 @@
 import React from 'react';
 import Accordion from './Accordion';
-import '../../App.css';
-
+import './App.css'
 
 const Faq = () => {
   return (

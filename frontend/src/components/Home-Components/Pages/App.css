@@ -1,0 +1,319 @@
+* {
+    box-sizing: border-box;
+    /* overflow-x: hidden; */
+    margin: 0;
+    padding: 0;
+    font-family: 'PT Sans', sans-serif;
+  }
+  
+  
+  /* .about,
+  .spaces,
+  .contact,
+  .sign-up {
+    display: flex;
+    height: 90vh;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+  }  */
+  
+  /* Style for about page */
+  .about {
+    display: flex;
+    padding: 2rem;
+    padding-top: 15vh;
+  }
+  
+  .about-content {
+    flex: 1;
+    padding: 0 20px;
+  }
+  
+  .about-content h2 {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    font-size: 2.8rem;
+    text-transform: uppercase;
+    color: cadetblue;
+  }
+  
+  .about-content p{
+    font-size: 1.2rem;
+    line-height: 2.5;
+    margin-bottom: 2rem;
+}
+  .image-section {
+    flex: 1;
+  }
+  
+  .image-section img {
+    width: 100%;
+    height: auto;
+  }
+  @media only screen and (max-width: 768px) {
+    .about {
+      flex-direction: column;
+      padding-top: 30vh;
+    }
+  }
+  @media only screen and (max-width: 425px) {
+    .about {
+      flex-direction: column;
+      padding-top: 10vh;
+    }
+  
+    .about-content,
+    .image-section {
+      width: 100%;
+    }
+    .image-section img {
+      width: 100%;
+      height: 50%;
+    }
+    .about-content p{
+      font-size: 1rem;
+      line-height: 1;
+      margin-bottom: 2rem;
+  }
+  .about-content h2 {
+    font-size: 1.8rem;
+  }
+  }
+  
+  .container h2 {
+    margin-bottom: 1rem;
+    /* margin-top: 1rem; */
+    font-size: 2.8rem;
+    text-transform: uppercase;
+    color: cadetblue;
+  }
+.card-body .btn{
+  background: cadetblue;
+  border: none;
+  border-radius: 11px;
+  cursor: pointer;
+  padding: 10px;
+  font-size: 18px;
+}
+@media (max-width: 426px){
+  .container h2 {
+    font-size: 1.8rem;
+  }
+}
+
+/* Style for contact page  */
+
+/* .contact {
+  position: relative;
+  min-height: 100vh; 
+   padding: 100px 0;
+ padding: 70px;
+   display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+} */
+
+.contact .content {
+  /* max-width: 800px; */
+  text-align: center;
+  padding-top: 2rem;
+}
+
+.contact .content h2 {
+  font-size: 2.8rem;
+  padding-top: 2rem;
+  /* padding-bottom: 1rem; */
+  text-transform: uppercase;
+  color: cadetblue;
+  /* text-align: center; */
+}
+
+.container {
+  /* width: 100%; */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+
+
+.contactInfo {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.box {
+  position: relative;
+  padding: 20px 0;
+  display: flex;
+}
+
+.c_icon {
+  min-width: 60px;
+  height: 60px;
+  display: flex;
+  background: cadetblue;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 22px;
+  margin-right: 20px;
+}
+
+.contactInfo .box .text {
+  width: calc(100% - 50px);
+  /* display: flex;
+  margin-left: 20px;
+  font-size: 16px;
+  flex-direction: column;
+  font-weight: 300; */
+}
+
+.container .contactInfo .box .text h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: cadetblue;
+  margin-bottom: 5px;
+}
+
+.contactForm {
+  width: 40%;
+  margin-bottom: 50px;
+  /* padding: 40px; */
+}
+
+.contactForm h2, h3 {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.inputBox {
+  position: relative;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.inputBox input,
+.inputBox textarea {
+  width: 100%;
+  font-size: 16px;
+  border-radius: 6px;
+  padding: 15px 20px;
+  box-sizing: border-box;
+  margin: 10px 0;
+  border: none;
+  border-bottom: 2px solid cadetblue;
+  background: transparent;
+  outline: none;
+  resize: none;
+}
+
+.inputBox span {
+  position: absolute;
+  left: 0;
+  padding: 5px 6px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  margin: 17px 0;
+  pointer-events: none;
+  transition: 0.5s;
+  color: #666;
+}
+
+.inputBox input:focus ~ span,
+.inputBox input:valid ~ span,
+.inputBox textarea:focus ~ span,
+.inputBox textarea:valid ~ span {
+  color: cadetblue;
+  font-size: 14px;
+  transform: translateY(-28px);
+}
+
+.inputBox input[type="submit"] {
+  width: 100%;
+  background: cadetblue;
+  color: #fff;
+  border: none;
+  border-radius: 11px;
+  cursor: pointer;
+  padding: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+@media only screen and (max-width: 428px) {
+  .container {
+    flex-direction: column;
+  }
+  .contactForm {
+    margin-top: 25px;
+    margin-bottom: 35px;
+  }
+  .contact .content h2{
+    font-size: 1.8rem;
+  }
+  .c_icon {
+    min-width: 30px;
+    border-radius: 90%;
+  }
+  .c_text {
+    font-size: 14px;
+  }
+  .h3 {
+    font-size: 15px;
+  }
+  .contactForm h2, h3 {
+    font-size: 1.5rem;
+  }
+}
+
+.accordion {
+  border: 1px solid #ddd;
+  /* margin-bottom: 10px; */
+  width: 50%;
+  align-items: center;
+  justify-content: center;
+margin: 0 auto;
+}
+
+.accordion-header {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background-color: cadetblue;
+}
+
+.accordion-header h3 {
+  margin: 0;
+  font-weight: normal;
+}
+
+.accordion-body {
+  padding: 10px;
+}
+
+.faq-container h2 {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  font-size: 2.8rem;
+  text-transform: uppercase;
+  text-align: center;
+  color: cadetblue;
+}
+
+@media (max-width: 426px){
+  .accordion {
+    width: 90%;
+    /* padding: 10px; */
+  }
+  .faq-container h2 {
+    font-size: 1.8rem;
+  }
+}

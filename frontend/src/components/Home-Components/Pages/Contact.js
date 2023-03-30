@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from "react-hook-form";
 // import { Form, Button } from 'semantic-ui-react';
-import '../../App.css';
+import './App.css'
 
 const Contact = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
