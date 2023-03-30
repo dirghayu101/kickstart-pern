@@ -25,6 +25,7 @@ body {
   font-size: 25px;
   font-weight: 500;
   position: relative;
+  color: black;
 }
 .container .title::before {
   content: "";

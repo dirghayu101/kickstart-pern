@@ -8,7 +8,7 @@
 body{
   margin: 0;
   padding: 0;
-  background-image: url("/frontend/public/images/meeting.jpg");
+  background-image: url('./frontend/public/images/2.jpg');
   height: 100vh;
   overflow: hidden;
 }
