@@ -58,7 +58,6 @@ const start = async () => {
     app.listen(PORT, () => {
       console.log(`Server is listening on http://localhost:${PORT}`);
     });
-    console.log("After database connection.")
   } catch (error) {
     console.log(`An error occurred: ${error}`);
   }
