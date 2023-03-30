@@ -15,7 +15,7 @@ const sendToken = (user, statusCode, res) => {
         httpOnly: true,
     }
 
-    res.status(statusCode).cookie('token', token, cookieOptions).json({
+    res.header('Authorization', `Bearer ${token}`).status(statusCode).cookie('token', token, cookieOptions).json({
         success: true,
         user: user.userID,
         token,
