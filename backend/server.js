@@ -43,11 +43,11 @@ const rowsExistInSpace = async () => {
 const start = async () => {
   try {
     await databaseConnection.connect();
-    await initializeDatabase();
-    if(await rowsExistInSpace()){
-      await deleteTestRows()
-      await insertTestRows()
-    }
+    // await initializeDatabase();
+    // if(await rowsExistInSpace()){
+    //   await deleteTestRows()
+    //   await insertTestRows()
+    // }
     console.log(`Database connected successfully!`);
     app.listen(PORT, () => {
       console.log(`Server is listening on http://localhost:${PORT}`);
