@@ -22,6 +22,7 @@ app.use(errorMiddleware)
 
 // Dummy Route
 app.get('/', (req, res) => {
+    console.log("Request received at get '/' route.")
     res.status(200).send('<h1>The website is under construction!</h1>')
 })
 
