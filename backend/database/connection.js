@@ -16,7 +16,7 @@
 // NOTE: New one starts here.
 const pg = require('pg')
 
-const conString = 'postgres://nzrcdxpb:hcxHjqx-eeoF7KMNWGpbAYp7WeT-dFKa@snuffleupagus.db.elephantsql.com/nzrcdxpb'
+const conString = 'postgres://vavxxosh:Qf-QS7FWwoQTplUPX0zJrzzaPfKUH6uV@tiny.db.elephantsql.com/vavxxosh'
 
 const client = new pg.Client(conString);
 
