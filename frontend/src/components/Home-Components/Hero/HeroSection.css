@@ -1,0 +1,43 @@
+.hero-container {
+    /* background-image: url('./images/img-home.jpg') center center/cover no-repeat; */
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+    object-fit: contain;
+  }
+  
+.hero-container img {
+    object-fit: cover;
+    width: 100%;
+    height: 100vh;
+    /* position: absolute; */
+    max-width: 100%;
+}
+  
+  .hero-container p {
+    /* color: rgba(96, 42, 42, 0.863); */
+    color: black;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  text-align: center;
+    font-size: 2.5rem;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+      'Lucida Sans', Arial, sans-serif;
+  }
+  
+  
+  @media screen and (max-width: 768px) {
+    .hero-container {
+      height: 50vh;
+    }
+    .hero-container > p {
+      font-size: 1.5rem;
+    }
+  }

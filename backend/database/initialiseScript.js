@@ -13,7 +13,7 @@ DELETE FROM public."Admin";
 
 INSERT INTO public."Admin"(
     "Password", "Admin-Username")
-    VALUES ('$2a$10$yMveWYwz85XnWp8wKHPNQ.eFru4aTFSteLRzH.xhzEIKuK/ckD3AO', 'kickstart-admin');
+    VALUES ('$2a$10$yMveWYwz85XnWp8wKHPNQ.eFru4aTFSteLRzH.xhzEIKuK/ckD3AO', 'kickstartadmin@gmail.com');
 
 CREATE TABLE IF NOT EXISTS public."User"
 (
