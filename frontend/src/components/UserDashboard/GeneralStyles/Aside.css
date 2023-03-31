@@ -1,0 +1,132 @@
+
+/* The container wrapping the entire website. */
+.container{
+    /* The layout will have 3 columns. */
+    display: grid;
+    width: 96%;
+    /* To push everything to the center. */
+    margin: 0 auto;
+    gap: 1.8rem;
+    /* The center section will be the main section and will take up the remaining space. */
+    grid-template-columns: 14rem auto 23rem;
+}
+
+/* The first column of the website. */
+aside{
+    height: 100%;
+    border-right: 0.5px solid red;
+    overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 14vw;
+}
+
+/* This is the logo section in the first column. */
+aside .top{
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.4rem;
+}
+
+/* This is to put the logo and the brand name in a row. */
+aside .logo{
+    display: flex;
+    margin-left: -30px;
+}
+
+aside .logo h2{
+    font-size: 1.8rem;
+}
+
+/* To hide the cross, we will toggle it later using JS */
+aside .close{
+    display: none;
+}
+
+
+/* OPTIONS OF THE SIDEBAR and THE SIDEBAR STYLING */
+
+/* This will target the entire menu with all its option and give it a column appearance using flex. */
+aside .sidebar{
+    display: flex;
+    flex-direction: column;
+    height: 86vh;
+    position: relative;
+    top: 3rem;
+}
+
+/* This will just target the text. */
+aside h3{
+    font-weight: 500;
+}
+
+/* This will target the text along with the icon. */
+aside .sidebar a{
+    display: flex;
+    color: var(--color-info-dark);
+    margin-left: 2rem;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+    height: 3.7rem;
+    transition: all 300ms ease;
+    list-style: none;
+    text-decoration: none;
+}
+
+/* This will target the icons. */
+aside .sidebar a span{
+    font-size: 1.6rem;
+    transition: all 300ms ease;
+}
+
+/* This is to select the logout and position it at the end of the sidebar. */
+aside .sidebar a:last-child{
+    position: absolute;
+    bottom: 2rem;
+    width: 100%;
+}
+
+/* This will be the selection effect on the list item. This active class will be given to the anchor element. */
+aside .sidebar a.active{ /*if I remove the space between a and .active, this is not working.*/
+    background: var(--color-light);
+    color: var(--color-primary);
+    margin-left: 0; 
+}
+
+/* This will put a line in the border-left of the element.*/
+aside .sidebar a.active:before{
+    content: "";
+    width: 6px;
+    height: 100%;
+    background: var(--color-primary);
+}
+
+/* This is to change the icon when the active class will be toggled. */
+aside .sidebar a.active span{
+    color: var(--color-primary);
+    margin-left: calc(1rem - 3px);
+}
+
+/* The below code will do the hover effect on the icons */
+aside .sidebar a:hover{
+    color: var(--color-primary);
+}
+
+/* This will give the shifting effect to icons on hovering over them. */
+aside .sidebar a:hover span{
+    margin-left: 1rem;
+}
+
+/* Message styling */
+aside .sidebar .message-count{
+    background: var(--color-danger);
+    color: var(--color-white);
+    padding: 2px 10px;
+    font-size: 11px;
+    border-radius: var(--border-radius-1);
+}

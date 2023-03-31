@@ -1,0 +1,106 @@
+.right{
+    margin-top: 1.4rem;
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.outer-right{
+    border-left: 0.5px solid red;
+    overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    right: 11px;
+    z-index: 1;
+    width: 18vw;
+    min-height: 100vh;
+}
+
+.right .top{
+    display: flex;
+    justify-content: end;
+    gap: 2rem;
+}
+
+.right .top button{
+    display: none;
+}
+
+.right .theme-toggler{
+    background: var(--color-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 1.6rem;
+    width: 4.2rem;
+    cursor: pointer;
+    border-radius: var(--border-radius-1);
+}
+
+.right .theme-toggler span{
+    font-size: 1.2rem;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.right .theme-toggler span.active{
+    background: var(--color-primary);
+    color: white;
+    border-radius: var(--border-radius-1);
+}
+
+.right .top .profile{
+    display: flex;
+    gap: 2rem;
+    text-align: right; 
+}
+
+.cart-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cart-btn .go-to-cart{
+    margin-left: 5px;
+    width: 10vw;
+    height: 8vh;
+    margin-bottom: 60px;
+    border-radius: 18px;
+    color: white;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+    background-color: rgba(240, 36, 36, 0.911);
+    transition: 0.4s ease;
+}
+
+.cart-btn .checkout{
+    margin-left: 5px;
+    width: 10vw;
+    height: 8vh;
+    margin-bottom: 60px;
+    border-radius: 18px;
+    color: white;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+    background-color: rgba(1, 118, 17, 0.95);
+    transition: 0.4s ease;
+}
+
+.cart-btn .go-to-cart:hover{
+    cursor: pointer;
+    background-color: rgb(230, 130, 130);
+    transition: 0.4s ease;
+}
+
+.cart-btn .checkout:hover{
+    background-color: rgba(1, 118, 17, 0.6);
+    cursor: pointer;
+    transition: 0.4s ease;
+}

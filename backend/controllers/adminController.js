@@ -110,7 +110,6 @@ module.exports.authenticateAdmin = catchAsyncError(async (req, res, next) => {
       ),
       httpOnly: true,
     };
-    console.log(token)
     res.status(200).header('Authorization', `Bearer ${token}`).cookie("token", token, cookieOptions).json({
       success: true,
       token,
