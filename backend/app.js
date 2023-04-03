@@ -2,12 +2,18 @@ const express = require("express")
 const app = express();
 const cookieParser = require("cookie-parser")
 const errorMiddleware = require("./middleware/error")
-const cors = require("cors")
+
+app.use(function(req, res, next) {
+    // Add headers to enable CORS
+    res.header("Access-Control-Allow-Origin", "*"); // allow requests from any origin
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); // allow the specified methods
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); // allow the specified headers
+    next();
+});
 app.use(express.json());
 app.use(cookieParser());
 
 // Router imports
-app.use(cors())
 const user = require("./routes/userRoutes")
 const admin = require("./routes/adminRoutes")
 const userReservation = require('./routes/userReservation')

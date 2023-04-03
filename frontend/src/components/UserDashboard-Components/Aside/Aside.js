@@ -13,37 +13,37 @@ const Aside = () => {
             </div>
 
             <div class="sidebar">
-                <a onclick="getPage('dashboard')" class="dashboard">
+                <a href="/user/dashboard/home" class="dashboard">
                     <span class="material-icons-sharp">
                         grid_view
                     </span>
                     <h3>Dashboard</h3>
                 </a>
-                <a onclick="getPage('spaces')" class="users spaces">
+                <a href="/user/dashboard" class="users spaces">
                     <span class="material-icons-sharp">
                         workspaces
                     </span>
                     <h3>Spaces</h3>
                 </a>
-                <a onclick="getPage('orders')" class="orders">
+                <a href="/user/dashboard/order" class="orders">
                     <span class="material-icons-sharp">
                         receipt_long
                     </span>
                     <h3>Orders</h3>
                 </a>
-                <a onclick="getPage('feedback')" class="reports feedback">
+                <a href="/user/dashboard/feedback" class="reports feedback">
                     <span class="material-icons-sharp">
                         auto_awesome
                     </span>
                     <h3>Feedback</h3>
                 </a>
-                <a onclick="getPage('support')" class="messages support">
+                <a href="/user/dashboard/support"  class="messages support">
                     <span class="material-icons-sharp">
                         handshake
                     </span>
                     <h3>Support</h3>
                 </a>
-                <a onclick="getPage('reschedule')" class="settings reschedule">
+                <a href="/user/dashboard/re-schedule"  class="settings reschedule">
                     <span class="material-icons-sharp">
                         settings
                     </span>

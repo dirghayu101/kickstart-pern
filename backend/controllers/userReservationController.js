@@ -77,6 +77,7 @@ module.exports.sendSpacesAvailable = catchAsyncError(async (req, res, next) => {
   let date = req.params.date;
   let resObj = await getAllSeatsForDate(date);
   res.status(201).json({
+    success: true,
     message: "Request received at the send spaces available route.",
     response: resObj,
   });
