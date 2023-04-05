@@ -74,16 +74,19 @@ aside .sidebar a{
     position: relative;
     height: 3.7rem;
     transition: all 300ms ease;
-    list-style: none;
-    text-decoration: none;
 }
 
 /* This will target the icons. */
 aside .sidebar a span{
     font-size: 1.6rem;
     transition: all 300ms ease;
+    
 }
 
+
+aside a{
+    text-decoration: none;
+}
 /* This is to select the logout and position it at the end of the sidebar. */
 aside .sidebar a:last-child{
     position: absolute;

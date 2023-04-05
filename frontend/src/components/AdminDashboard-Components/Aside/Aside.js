@@ -1,8 +1,8 @@
 import React from "react"
 
 const Aside = () => {
-    const logoutUser = () => {
-       localStorage.removeItem('token')
+    const logoutAdmin = () => {
+        localStorage.removeItem('token')
     }
 
     return (
@@ -17,43 +17,50 @@ const Aside = () => {
             </div>
 
             <div class="sidebar">
-                <a href="/user/dashboard/home" class="dashboard">
+                <a href="/admin/dashboard/home" class="dashboard">
                     <span class="material-icons-sharp">
                         grid_view
                     </span>
                     <h3>Dashboard</h3>
                 </a>
-                <a href="/user/dashboard/spaces" class="users spaces">
+                <a href="/admin/dashboard/users" class="users">
                     <span class="material-icons-sharp">
-                        workspaces
+                        person_outline
                     </span>
-                    <h3>Spaces</h3>
+                    <h3>Users</h3>
                 </a>
-                <a href="/user/dashboard/order" class="orders">
+                <a href="/admin/dashboard/orders" class="orders">
                     <span class="material-icons-sharp">
                         receipt_long
                     </span>
                     <h3>Orders</h3>
                 </a>
-                <a href="/user/dashboard/feedback" class="reports feedback">
+                <a href="/admin/dashboard/feedback" class="messages">
                     <span class="material-icons-sharp">
-                        auto_awesome
+                        mail_outline
                     </span>
-                    <h3>Feedback</h3>
+                    <h3>Messages</h3>
+                    <span class="message-count">12</span>
                 </a>
-                <a href="/user/dashboard/support"  class="messages support">
+                <a href="/admin/dashboard/spaces" class="products">
                     <span class="material-icons-sharp">
-                        handshake
+                        inventory
                     </span>
-                    <h3>Support</h3>
+                    <h3>Products</h3>
                 </a>
-                <a href="/user/dashboard/re-schedule"  class="settings reschedule">
+                <a href="/admin/dashboard/settings" class="settings">
                     <span class="material-icons-sharp">
                         settings
                     </span>
-                    <h3>Re-schedule</h3>
+                    <h3>Settings</h3>
                 </a>
-                <a href="/login" onClick={logoutUser}>
+                <a href="/admin/dashboard/add" class="addProducts">
+                    <span class="material-icons-sharp">
+                        add
+                    </span>
+                    <h3>Add Products</h3>
+                </a>
+                <a href="/admin/login" onClick={logoutAdmin}>
                     <span class="material-icons-sharp">
                         logout
                     </span>

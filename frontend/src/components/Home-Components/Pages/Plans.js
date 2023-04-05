@@ -17,7 +17,7 @@ const Plans = () => {
                 Rs. 500 + GST
                 <br /> <br />{" "}
               </p>
-              <a href="#" class="btn btn-primary">
+              <a href="/login" class="btn btn-primary">
                 Book Now
               </a>
             </div>
@@ -31,7 +31,7 @@ const Plans = () => {
               <p class="card-text">
                 Rs. 3000 + GST <br />{" "}
               </p>
-              <a href="#" class="btn btn-primary">
+              <a href="/login" class="btn btn-primary">
                 Book Now
               </a>
             </div>
@@ -45,7 +45,7 @@ const Plans = () => {
               <p class="card-text">
                 Rs. 500 + GST <br /> Capacity: 8 people <br />
               </p>
-              <a href="#" class="btn btn-primary">
+              <a href="/login" class="btn btn-primary">
                 Book Now
               </a>
             </div>

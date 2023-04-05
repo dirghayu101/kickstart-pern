@@ -1,0 +1,142 @@
+
+.item-picture {
+    overflow: hidden;
+    border: 1px solid red;
+    width: 200px;
+    height: 200px;
+    border: 20px;
+}
+
+.item-picture img {
+    width: 188px;
+    height: 173px;
+}
+
+.space-type {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.outer-box {
+    font-size: 1rem;
+}
+
+.outer-box h2 {
+    text-align: center;
+}
+
+.outer-layer {
+    border-top: 1px solid grey;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.cart-body {
+    width: 100%;
+}
+
+.heading-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 1px solid grey;
+}
+
+.heading-row p {
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    text-align: center;
+}
+
+
+.heading-row-space {
+    margin-left: -7vw;
+}
+
+.heading-row-type {
+    width: 33%;
+}
+
+.heading-row-type p {
+    margin-left: -3vw;
+}
+
+.item-row {
+    padding-top: 2vh;
+    width: 100%;
+    border-bottom: 1px solid grey;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-row div {
+    width: 100%;
+}
+
+.number-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 7px;
+}
+
+.item-row .price {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item-row .date p {
+    font-size: 0.8rem;
+    margin-left: -1vw;
+}
+
+.item-row .date {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 1.3vh;
+}
+
+.decrement,
+.increment {
+    border: 1px solid grey;
+    border-radius: 50%;
+    color: grey;
+    font-weight: 200;
+    transition: 0.4s ease;
+    font-size: 1.2rem;
+}
+
+.decrement:hover {
+    cursor: pointer;
+    background-color: rgba(244, 135, 135, 0.53);
+    color: white;
+    transition: 0.4s ease;
+}
+
+.increment:hover {
+    transition: 0.4s ease;
+    background-color: rgba(184, 213, 184, 0.978);
+    color: white;
+    cursor: pointer;
+}
+
+.total-price {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 3vw;
+    font-size: 1.1rem;
+    padding-bottom: 6vh;
+    margin-top: -7vh;
+}

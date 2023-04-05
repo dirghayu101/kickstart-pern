@@ -14,19 +14,21 @@ const Main = () => {
   };
 
   useEffect(() => {
+    document.querySelector(".spaces").classList.add("active");
+    fetchData();
     async function fetchData() {
       try {
         const date = currentDate();
+        const token = localStorage.getItem("token");
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         const url = `http://localhost:3500/api/v1/user/spaces/${date}`;
         const response = await axios.get(url);
         const result = convertArrayToObject(response.data.response);
         setCatalogueObjects(result);
-        document.querySelector(".spaces").classList.add("active");
       } catch (error) {
         console.error("Error occurred", error);
       }
     }
-    fetchData();
     return () => {
       document.querySelector(".spaces").classList.remove("active");
     };
@@ -46,22 +48,22 @@ const Main = () => {
 
   const spaceObjects = {
     "Conference-Room": {
-      img: "/assets/user-panel/catalogue/conferenceRoom.webp",
+      img: "/images/dashboard-assets/conferenceRoom.webp",
       spaceType: "Conference Room",
       spacePrice: "For ₹6000 per day",
     },
     "Private-Office": {
-      img: "/assets/user-panel/catalogue/privateOffice.webp",
+      img: "/images/dashboard-assets/privateOffice.webp",
       spaceType: "Private Office",
       spacePrice: "For ₹1500 per day",
     },
     "Hot-Seat": {
-      img: "/assets/user-panel/catalogue/hotSeat.webp",
+      img: "/images/dashboard-assets/hotSeat.webp",
       spaceType: "Hot Seat",
       spacePrice: "For ₹600 per day",
     },
     Cubicle: {
-      img: "/assets/user-panel/catalogue/cubicle.webp",
+      img: "/images/dashboard-assets/cubicle.webp",
       spaceType: "Cubicle",
       spacePrice: "For ₹300 per day",
     },
@@ -72,7 +74,7 @@ const Main = () => {
     return (
       <div className="space">
         <div className="image-box">
-          <img src={img} className="space-image" />
+          <img src={img} alt="space" className="space-image" />
         </div>
         <div className="space-info">
           <h2>{spaceType}</h2>

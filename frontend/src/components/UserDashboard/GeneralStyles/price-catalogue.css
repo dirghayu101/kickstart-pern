@@ -1,0 +1,78 @@
+#bookHeading{
+    text-align: center;
+}
+
+.space{
+    display: grid;
+    grid-template-columns: 53% auto;
+    background: var(--color-white);
+    box-shadow: var(--box-shadow);
+}
+
+.image-box{
+    overflow: hidden;
+}
+
+.space-image{
+    width: 100%;
+    height: 35vh;
+    scale: 1.2;
+}
+
+.space-info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.space-info h2{
+    padding-bottom: 7px;
+}
+
+.space-info p{
+    font-size: 1rem;
+}
+.outer-box{
+    margin: 45px 0 130px;
+    padding-left: 40px; 
+    display: flex;
+    flex-direction: column;
+    gap: 50px
+}
+
+.book-btn{
+    margin-top: 18px;
+    border-radius: var(--card-border-radius);
+    height: 7vh;
+    width: 10vw;
+    font-size: 1rem;
+    text-transform: uppercase;
+    border: 1px solid black;
+    transition: 0.4s ease;
+}
+
+.book-btn:hover{
+    background-color: rgb(65, 205, 158);
+    color: white;
+    cursor: pointer;
+    transition: 0.4s ease;
+}
+
+.remove-book-btn{
+    margin-top: 18px;
+    border-radius: var(--card-border-radius);
+    height: 7vh;
+    width: 10vw;
+    font-size: 1rem;
+    text-transform: uppercase;
+    border: 1px solid black;
+    transition: 0.4s ease;
+}
+
+.remove-book-btn:hover{
+    background-color: rgba(198, 81, 81, 0.754);
+    color: white;
+    cursor: pointer;
+    transition: 0.4s ease;
+}

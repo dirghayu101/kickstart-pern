@@ -1,6 +1,23 @@
-import React from "react"
+import React from "react";
+import {useState, useEffect} from "react";
+import axios from 'axios'
 
 const Right = () => {
+    const [user, setUser] = useState({})
+    useEffect(()=>{
+        async function fetchUser(){
+            try{
+                const token = localStorage.getItem('token')
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+                const url = `http://localhost:3500/api/v1/user/user-info`
+                const response = await axios.get(url)
+                setUser(response.data.user)
+            } catch(error){
+                console.log('error occurred', error)
+            }
+        }
+        fetchUser()
+    }, [])
     return (
         <>
          <div class="outer-right">
@@ -18,8 +35,7 @@ const Right = () => {
                 <div class="profile">
                     <div class="info">
                         <p>Hey, <b>
-                            </b></p>
-                        <small class="text-muted">User</small>
+                            </b>{user.firstName}</p>
                     </div>
                     <div class="profile-photo">
                         {/* <img src="/assets/user-panel/profilePicture.png" alt="" srcset=""> */}

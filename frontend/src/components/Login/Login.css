@@ -8,7 +8,7 @@
 .body-loginPage{
   margin: 0;
   padding: 0;
-  background-image: url('./frontend/public/images/2.jpg');
+  background-image: url('http://localhost:3000/images/background/2.jpg');
   height: 100vh;
   overflow: hidden;
 }

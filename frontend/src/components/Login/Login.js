@@ -3,20 +3,33 @@ import axios from "axios"
 import {useState} from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-const Login = () => {
+const Login = ({filler, urlPost, urlNavigate}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate();
 
+  function getCookie(name) {
+    const cookies = document.cookie.split('; ');
+    for (const cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName === name) {
+        return cookieValue;
+      }
+    }
+    return '';
+  }
+
   const handleClick = async (event) => {
     event.preventDefault()
     try {
-      const response = await axios.post('http://localhost:3500/api/v1/user/login', {
+      const response = await axios.post(urlPost, {
         mailID:email,
         password
       });
       if(response.data.success){
-        navigate('/user/dashboard')
+        const token = response.data.token
+        localStorage.setItem('token', token)
+        navigate(urlNavigate)
       } else{
         alert('User/Password is incorrect!')
       }
@@ -29,7 +42,7 @@ const Login = () => {
   return (
     <div className="body-loginPage">
       <div class="center">
-        <h1>Login</h1>
+        <h1>{filler} Login</h1>
         <form method="post" id="login-form">
           <div class="txt_field">
             <input type="text" id="email" value={email} onChange={(e) => setEmail(e.target.value)}  required />

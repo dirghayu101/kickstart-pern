@@ -12,6 +12,7 @@ const {
 const sendToken = require("../utils/jwtSetup");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
+const databaseConnection = require('../database/connection')
 
 const getResetPasswordToken = (req) => {
   const resetToken = crypto.randomBytes(20).toString("hex");
@@ -65,6 +66,16 @@ exports.updatePassword = catchAsyncError(async (req, res, next) => {
   }
   return next(new ErrorHandler(`Something went wrong!`, 500));
 });
+
+exports.sendUserInformation = catchAsyncError(async (req, res, next) => {
+  const queryString = `SELECT "userID", "phoneNumber", "mailID", "firstName", "lastName" FROM public."User" WHERE "userID"='${req.user[0].userID}';`
+  let {rows:result} = await databaseConnection.query(queryString)
+  result = result[0]
+  res.status(200).json({
+    success: true,
+    user:result
+  })
+})
 
 exports.updateUserInformation = catchAsyncError(async (req, res, next) => {
   const result = await updateUserInformationRequest(req);

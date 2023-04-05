@@ -8,6 +8,7 @@ const {
   updateUserInformation,
   forgotPassword,
   resetPassword,
+  sendUserInformation,
 } = require("../controllers/userController");
 
 // This middleware will verify the user before giving them access to the data.
@@ -42,6 +43,8 @@ router
     verifyUserPassword,
     updateUserInformation
   );
+
+router.route("/user-info").get(isAuthenticatedUser, sendUserInformation)
 
 router.route("/password/forgot").post(checkUserDoExist, forgotPassword);
 

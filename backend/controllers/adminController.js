@@ -90,7 +90,7 @@ module.exports.sendAdminLogin = (req, res) => {
 };
 
 module.exports.authenticateAdmin = catchAsyncError(async (req, res, next) => {
-  const { admin, password } = req.body;
+  const { mailID:admin, password } = req.body;
   if (!admin || !password) {
     return next(new ErrorHandler(`The request body is empty.`, 400));
   }

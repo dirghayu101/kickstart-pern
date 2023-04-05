@@ -2,16 +2,26 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react"
-import Home from "./components/Home/Home.js";
-import Login from './components/Login/Login.js';
-import Signup from './components/Signup/Signup.js';
+import PrivateRoute from "./components/Utils/PrivateRoute";
+import LoginCheckRoute from "./components/Utils/LoginCheckRoute";
+const Home = lazy(()=> import('./components/Home/Home.js'))
+const Login = lazy(() => import('./components/Login/Login.js'))
+const Signup = lazy(()=> import('./components/Signup/Signup.js'))
 const UserDashboard = lazy(() => import('./components/UserDashboard/UserDashboard.js'))
-const UserDashboardHome = lazy(() => import('./components/UserDashboard/UserDashboardHome.js'))
-const UserDashboardOrder = lazy(() => import('./components/UserDashboard/UserDashboardOrder.js'))
-const UserDashboardFeedback = lazy(() => import('./components/UserDashboard/UserDashboardFeedback.js'))
-const UserDashboardSupport = lazy(() => import('./components/UserDashboard/UserDashboardSupport.js'))
-const UserDashboardReSchedule = lazy(() => import('./components/UserDashboard/UserDashboardReSchedule.js'))
+const AdminDashboard = lazy(() => import('./components/AdminDashboard/AdminDashboard.js'))
 
+const loginPage = [
+  {
+    filler: 'User',
+    urlPost: 'http://localhost:3500/api/v1/user/login',
+    urlNavigate: '/user/dashboard/spaces'
+  },
+  {
+    filler: 'Admin',
+    urlPost: 'http://localhost:3500/api/v1/admin/suman-kickstart',
+    urlNavigate: '/admin/dashboard/home'
+  }
+]
 
 function App() {
   return (
@@ -20,15 +30,11 @@ function App() {
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<LoginCheckRoute redirectTo="/user/dashboard/spaces" component={Login} props={loginPage[0]}/>}/>
+            <Route path="/admin/login" element={<LoginCheckRoute redirectTo="/admin/dashboard/home" component={Login} props={loginPage[1]} />} />
             <Route path="/sign-up" element={<Signup />} />
-            <Route path="/user/dashboard" element={<UserDashboard />} />
-            <Route path="/user/dashboard/home" element={<UserDashboardHome/>}/>
-            <Route path="/user/dashboard/order" element={<UserDashboardOrder/>}/>
-            <Route path="/user/dashboard/feedback" element={<UserDashboardFeedback/>}/>
-            <Route path="/user/dashboard/support" element={<UserDashboardSupport/>}/>
-            <Route path="/user/dashboard/re-schedule" element={<UserDashboardReSchedule/>}/>
-
+            <Route path="/user/dashboard/:dashboardMenu"  element={<PrivateRoute redirectTo="/login" component={UserDashboard} />} />
+            <Route path="/admin/dashboard/:dashboardMenu" element={<PrivateRoute redirectTo="/admin/login" component={AdminDashboard}/>} />
           </Routes>
         </Suspense>
       </Router>

@@ -2,14 +2,9 @@ const express = require("express")
 const app = express();
 const cookieParser = require("cookie-parser")
 const errorMiddleware = require("./middleware/error")
+const cors = require('cors')
 
-app.use(function(req, res, next) {
-    // Add headers to enable CORS
-    res.header("Access-Control-Allow-Origin", "*"); // allow requests from any origin
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); // allow the specified methods
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); // allow the specified headers
-    next();
-});
+app.use(cors())
 app.use(express.json());
 app.use(cookieParser());
 
