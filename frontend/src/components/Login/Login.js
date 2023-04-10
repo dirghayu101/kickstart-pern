@@ -8,20 +8,22 @@ const Login = ({filler, urlPost, urlNavigate}) => {
   const [password, setPassword] = useState('')
   const navigate = useNavigate();
 
-  function getCookie(name) {
-    const cookies = document.cookie.split('; ');
-    for (const cookie of cookies) {
-      const [cookieName, cookieValue] = cookie.split('=');
-      if (cookieName === name) {
-        return cookieValue;
-      }
+  function validatedValues(email, password){
+    if(!email || !password){
+      alert("Enter the fields specified")
+      return false
     }
-    return '';
+    // Write the code for email validation. Password validation is not required.
+
+    return true //Only if all the validations pass
   }
 
   const handleClick = async (event) => {
     event.preventDefault()
     try {
+      if(!validatedValues(email, password)){
+        return
+      }
       const response = await axios.post(urlPost, {
         mailID:email,
         password
