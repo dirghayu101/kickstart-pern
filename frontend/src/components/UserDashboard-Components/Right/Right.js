@@ -35,10 +35,10 @@ const Right = () => {
                 <div class="profile">
                     <div class="info">
                         <p>Hey, <b>
-                            </b>{user.firstName}</p>
+                            {user.firstName}</b></p>
                     </div>
                     <div class="profile-photo">
-                        {/* <img src="/assets/user-panel/profilePicture.png" alt="" srcset=""> */}
+                        <img src="/images/user-panel/profilePicture.png" alt="" srcset=""/>
                     </div>
                 </div>
             </div>

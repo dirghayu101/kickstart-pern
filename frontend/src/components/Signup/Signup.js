@@ -11,10 +11,31 @@ const Signup = () => {
   const [firstName, setFName] = useState('')
   const [lastName, setLName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
+ 
+  const validatedValues = (password, email, firstName, lastName, phoneNumber) => {
+    // Password validation: Should have small character, alphanumeric and a symbol and one character in caps. Put validation for that.
+    if(!password){
+      alert("Password issue.!")
+      return false  //Return false in case the validation fails. DO NOT FORGET.
+    }
+    // Email Validation
+    if(!email){
+      alert("Email not entered!")
+      return false  //Return false in case the validation fails. DO NOT FORGET.
+    }
+    
+
+    return true   //Return true only is all the values have been successfully validated.
+
+  }
+
   const handleClick = async (event) => {
     event.preventDefault()
     let response
     try {
+      if(!validatedValues(password, email, firstName, lastName, phoneNumber)){
+        return
+      }
       response = await axios.post('http://localhost:3500/api/v1/user/register', {
       password,
       mailID:email,

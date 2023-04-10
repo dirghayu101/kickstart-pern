@@ -33,7 +33,7 @@ const Order = () => {
     reservationDate,
   }) => {
     return (
-      <tr>
+      <tr className="">
         <td>{seatID}</td>
         <td>{reservationID}</td>
         <td>{transactionNumber}</td>
