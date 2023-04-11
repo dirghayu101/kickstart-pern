@@ -1,9 +1,11 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Main = () => {
   const [catalogueObjects, setCatalogueObjects] = useState([]);
+  const navigate = useNavigate();
   const currentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -13,8 +15,25 @@ const Main = () => {
     return formattedDate;
   };
 
+  function setCartButton() {
+    const cartButton = document.querySelector(".cart-btn button");
+    cartButton.textContent = "Go to cart";
+    cartButton.classList.add("go-to-cart");
+    cartButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      navigate("/user/dashboard/cart");
+    });
+  }
+
+  function removeCartButton() {
+    const cartButton = document.querySelector(".cart-btn button");
+    cartButton.textContent = "";
+    cartButton.classList.remove("go-to-cart");
+  }
+
   useEffect(() => {
     document.querySelector(".spaces").classList.add("active");
+    setCartButton();
     fetchData();
     async function fetchData() {
       try {
@@ -31,6 +50,7 @@ const Main = () => {
     }
     return () => {
       document.querySelector(".spaces").classList.remove("active");
+      removeCartButton();
     };
   }, []);
 
@@ -69,6 +89,60 @@ const Main = () => {
     },
   };
 
+  const addHoverEffect = (event) => {
+    const button = event.target;
+    const notClicked =
+      button.classList.contains("book-btn") &&
+      button.classList.contains("addBtn") &&
+      button.classList.contains("removeBtn");
+    if (!notClicked) {
+      button.textContent = "Remove";
+    }
+  };
+
+  const removeHoverEffect = (event) => {
+    const button = event.target;
+    const notClicked =
+      button.classList.contains("book-btn") &&
+      button.classList.contains("addBtn") &&
+      button.classList.contains("removeBtn");
+    if (!notClicked) {
+      button.textContent = "Added";
+    }
+  };
+
+  const handleClick = (event) => {
+    let cartData = JSON.parse(localStorage.getItem("cartData")) || [];
+    const button = event.target;
+    const itemID = button.parentElement.querySelector("h2").innerHTML.trim();
+    const notClicked =
+      button.classList.contains("book-btn") &&
+      button.classList.contains("addBtn") &&
+      button.classList.contains("removeBtn");
+    const getItem = cartData.find((item) => item.itemID === itemID);
+    if (notClicked) {
+      if (!getItem) {
+        cartData.push({
+          itemID,
+          value: 1,
+        });
+      } else {
+        getItem.value = 1;
+      }
+      button.classList.remove("addBtn", "book-btn", "removeBtn");
+      button.classList.add("remove-book-btn");
+      button.textContent = "Added";
+    } else {
+      if (getItem) {
+        cartData = cartData.filter((obj) => obj.itemID !== itemID);
+      }
+      button.classList.remove("remove-book-btn");
+      button.classList.add("addBtn", "book-btn", "removeBtn");
+      button.textContent = "Add to cart";
+    }
+    localStorage.setItem("cartData", JSON.stringify(cartData));
+  };
+
   const getElement = (space) => {
     const { img, spaceType, spacePrice } = spaceObjects[space];
     return (
@@ -79,7 +153,14 @@ const Main = () => {
         <div className="space-info">
           <h2>{spaceType}</h2>
           <p>{spacePrice}.</p>
-          <button className="book-btn addBtn removeBtn">Add to cart</button>
+          <button
+            className="book-btn addBtn removeBtn"
+            onMouseEnter={addHoverEffect}
+            onMouseLeave={removeHoverEffect}
+            onClick={handleClick}
+          >
+            Add to cart
+          </button>
         </div>
       </div>
     );

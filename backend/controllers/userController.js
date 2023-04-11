@@ -39,6 +39,10 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
   }
 });
 
+exports.resetPasswordPage = (req, res) => {
+  res.sendFile("/Users/dirghayujoshi/Desktop/major_project/kickstart-workhub/backend/utils/resetPassword.html")
+}
+
 exports.loginUser = catchAsyncError(async (req, res, next) => {
   return sendToken(req.user[0], 200, res);
 });

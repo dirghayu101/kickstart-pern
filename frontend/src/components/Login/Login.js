@@ -18,6 +18,10 @@ const Login = ({filler, urlPost, urlNavigate}) => {
     return true //Only if all the validations pass
   }
 
+  const sendRecoveryPath = () => {
+    navigate("/user/recover-account")
+  }
+
   const handleClick = async (event) => {
     event.preventDefault()
     try {
@@ -56,7 +60,7 @@ const Login = ({filler, urlPost, urlNavigate}) => {
             <span></span>
             <label>Password</label>
           </div>
-          <div class="pass">Forgot Password?</div>
+          <div class="pass" onClick={sendRecoveryPath}>Forgot Password?</div>
           <input type="submit" value="Login" onClick={handleClick} />
           <div class="signup_link">
             Not a member? <a href="/sign-up">Signup</a>

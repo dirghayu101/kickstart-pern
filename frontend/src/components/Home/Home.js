@@ -7,6 +7,7 @@ import Faq from "../Home-Components/Pages/Faq.js";
 import HeroSection from "../Home-Components/Hero/HeroSection.js";   //Home Route
 import Footer from "../Home-Components/Footer/Footer.js";
 import Slider from "../Home-Components/Reviews/Slider.js";
+import "./Home.css"
 
 function Home() {
   return (

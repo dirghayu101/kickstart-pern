@@ -8,7 +8,9 @@ const Home = lazy(()=> import('./components/Home/Home.js'))
 const Login = lazy(() => import('./components/Login/Login.js'))
 const Signup = lazy(()=> import('./components/Signup/Signup.js'))
 const UserDashboard = lazy(() => import('./components/UserDashboard/UserDashboard.js'))
+const ForgetPassword = lazy(() => import("./components/Login/ForgetPassword.js"))
 const AdminDashboard = lazy(() => import('./components/AdminDashboard/AdminDashboard.js'))
+const PaymentPage = lazy(() => import('./components/Utils/PaymentPage.js'))
 
 const loginPage = [
   {
@@ -35,6 +37,8 @@ function App() {
             <Route path="/sign-up" element={<Signup />} />
             <Route path="/user/dashboard/:dashboardMenu"  element={<PrivateRoute redirectTo="/login" component={UserDashboard} />} />
             <Route path="/admin/dashboard/:dashboardMenu" element={<PrivateRoute redirectTo="/admin/login" component={AdminDashboard}/>} />
+            <Route path="/user/pay" element={<PrivateRoute redirectTo="/login" component={PaymentPage}/>}/>
+            <Route path="/user/recover-account" element={<ForgetPassword/>} />
           </Routes>
         </Suspense>
       </Router>
