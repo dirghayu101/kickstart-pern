@@ -145,6 +145,7 @@ module.exports.userMakeReservation = catchAsyncError(async (req, res, next) => {
     }
   }
   res.status(201).json({
+    success: true,
     message: "Reservations made successfully.",
   });
 });
