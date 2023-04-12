@@ -67,22 +67,22 @@ const Main = () => {
   }
 
   const spaceObjects = {
-    "Conference-Room": {
+    "Conference_Room": {
       img: "/images/dashboard-assets/conferenceRoom.webp",
       spaceType: "Conference Room",
       spacePrice: "For ₹6000 per day",
     },
-    "Private-Office": {
+    "Private_Office": {
       img: "/images/dashboard-assets/privateOffice.webp",
       spaceType: "Private Office",
       spacePrice: "For ₹1500 per day",
     },
-    "Hot-Seat": {
+    "Hot_Seat": {
       img: "/images/dashboard-assets/hotSeat.webp",
       spaceType: "Hot Seat",
       spacePrice: "For ₹600 per day",
     },
-    Cubicle: {
+    "Cubicle": {
       img: "/images/dashboard-assets/cubicle.webp",
       spaceType: "Cubicle",
       spacePrice: "For ₹300 per day",
@@ -114,7 +114,7 @@ const Main = () => {
   const handleClick = (event) => {
     let cartData = JSON.parse(localStorage.getItem("cartData")) || [];
     const button = event.target;
-    const itemID = button.parentElement.querySelector("h2").innerHTML.trim();
+    const itemID = button.parentElement.querySelector("h2").textContent.trim().replace(/\s+/g, '_');
     const notClicked =
       button.classList.contains("book-btn") &&
       button.classList.contains("addBtn") &&
@@ -125,9 +125,11 @@ const Main = () => {
         cartData.push({
           itemID,
           value: 1,
+          reserveDate: new Date().toISOString().slice(0, 10)
         });
       } else {
         getItem.value = 1;
+        getItem.reserveDate = new Date().toISOString().slice(0, 10)
       }
       button.classList.remove("addBtn", "book-btn", "removeBtn");
       button.classList.add("remove-book-btn");
@@ -144,6 +146,7 @@ const Main = () => {
   };
 
   const getElement = (space) => {
+    space = space.replace("-", "_")
     const { img, spaceType, spacePrice } = spaceObjects[space];
     return (
       <div className="space">

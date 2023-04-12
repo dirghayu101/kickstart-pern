@@ -1,6 +1,6 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"
 
 function CartPage() {
   const navigate = useNavigate()
@@ -8,24 +8,24 @@ function CartPage() {
     JSON.parse(localStorage.getItem("cartData")) || []
   );
   const [totalPrice, setTotalPrice] = useState(0)
-  
+  const formattedDate = new Date().toISOString().slice(0, 10);
   const spaceDataObjects = {
-    "Conference Room": {
+    "Conference_Room": {
       img: "/images/dashboard-assets/conferenceRoom.webp",
-      objName: "Conference Room",
+      objName: "Conference_Room",
       price: 6000,
     },
-    "Private Office": {
+    "Private_Office": {
       img: "/images/dashboard-assets/privateOffice.webp",
-      objName: "Private Office",
+      objName: "Private_Office",
       price: 1500,
     },
-    "Hot Seat": {
+    "Hot_Seat": {
       img: "/images/dashboard-assets/hotSeat.webp",
-      objName: "Hot Seat",
+      objName: "Hot_Seat",
       price: 600,
     },
-    Cubicle: {
+    "Cubicle": {
       img: "/images/dashboard-assets/cubicle.webp",
       objName: "Cubicle",
       price: 300,
@@ -44,8 +44,9 @@ function CartPage() {
 
   const addItem = (itemId) => {
     const item = cartData.find((item) => item.itemID === itemId);
+    const reserveDate = document.querySelector(`#${item.itemID}`).value
     if (item) {
-      const updatedItem = { ...item, value: item.value + 1 };
+      const updatedItem = { ...item, value: item.value + 1,  reserveDate};
       const updatedCart = cartData.map((item) => (item.itemID === itemId ? updatedItem : item));
       setCartData(updatedCart);
       localStorage.setItem("cartData", JSON.stringify(updatedCart));
@@ -56,8 +57,10 @@ function CartPage() {
   const removeItem = (itemId) => {
     const updatedCart = cartData.map((item) => {
       if (item.itemID === itemId) {
+        const reserveDate = document.querySelector(`#${item.itemID}`).value
+        item.reserveDate = reserveDate
         if (item.value > 1) {
-          return { ...item, value: item.value - 1 };
+          return { ...item, value: item.value - 1, reserveDate };
         } else {
           return null;
         }
@@ -70,14 +73,51 @@ function CartPage() {
     calculateTotal()
   };
 
+  function convertArrayToObject(arr) {
+    const result = {};
+    arr.forEach(item => {
+      const key = item.itemID.replace('_', '-');
+      if (!result[key]) {
+        result[key] = [item.reserveDate];
+      } else {
+        result[key].push(item.reserveDate);
+      }
+      for (let i = 1; i < item.value; i++) {
+        result[key].push(item.reserveDate);
+      }
+    });
+    return result;
+  }
+
+  async function insertInDatabase(){
+    const cartItems = JSON.parse(localStorage.getItem("cartData"))
+    const reservation = convertArrayToObject(cartItems)
+    const token = localStorage.getItem("token");
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    const urlPost = "http://localhost:3500/api/v1/user/reserve"
+    const response = await axios.post(urlPost, {reservation})
+    if(response.data.success){
+      console.log(response)
+      return true
+    } else{
+      console.log(response)
+      alert("Something went wrong, please try again later!")
+      return false
+    }
+  }
+
   function setupPageElements() {
     document.querySelector(".spaces").classList.add("active");
     const cartButton = document.querySelector(".cart-btn button");
     cartButton.innerHTML = "checkout";
     cartButton.classList.add("checkout");
-    cartButton.addEventListener('click', (event) => {
+    cartButton.addEventListener('click', async (event) => {
       event.preventDefault();
-      navigate("/user/pay");
+      if(await insertInDatabase()){
+        navigate("/user/pay");
+      }else{
+        return
+      }
     })
   }
 
@@ -122,14 +162,14 @@ function CartPage() {
                     style: "currency",
                     currency: "INR",
                   }).format(price * item.value);
-                  const formattedDate = new Date().toISOString().slice(0, 10);
+                  
                 return (
-                  <div className="item-row" key={item.itemID}>
+                  <div className="item-row" name=""key={item.itemID}>
                     <div className="item-picture">
                       <img src={img} alt={`${objName}`} />
                     </div>
                     <div className="space-type">
-                      <p>{objName}</p>
+                      <p>{objName.replace("_", " ")}</p>
                     </div>
                     <div className="number-item">
                       <button
@@ -147,7 +187,7 @@ function CartPage() {
                       </button>
                     </div>
                     <div className="date">
-                    <input type="date" value={formattedDate} />
+                    <input type="date" class="testInput" id={`${item.itemID}`} defaultValue={formattedDate}/>
                     </div>
                     <div className="price">
                       <p>{formattedPrice}</p>
@@ -167,3 +207,38 @@ function CartPage() {
   );
 }
 export default CartPage;
+
+
+/*
+[ 
+  {
+      "itemID": "Private_Office",
+      "value": 3,
+      "reserveDate": "2023-04-22"
+  },
+  {
+      "itemID": "Hot_Seat",
+      "value": 7,
+      "reserveDate": "2023-04-28"
+  },
+  {
+      "itemID": "Cubicle",
+      "value": 2,
+      "reserveDate": "2023-04-12"
+  },
+  {
+      "itemID": "Conference_Room",
+      "value": 1,
+      "reserveDate": "2023-04-17"
+  },
+]
+
+{
+  "Private-Office": ["2023-04-22", "2023-04-22", "2023-04-22"],
+  "Hot-Seat": ["2023-04-28", "2023-04-28", "2023-04-28", "2023-04-28", "2023-04-28", "2023-04-28", "2023-04-28"],
+  "Cubicle":["2023-04-12", "2023-04-12"],
+  "Conference-Room":["2023-04-17"]
+}
+
+*/
+
