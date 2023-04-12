@@ -1,152 +1,145 @@
-import React from "react";
-import { useEffect} from "react"
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { v4 as uuid } from "uuid";
 
 const Main = () => {
-  
+  const [currentReservations, setCurrentReservations] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const [totalSale, setTotalSale] = useState("");
+
+  async function fetchReservationData() {
+    const token = localStorage.getItem("token");
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    const url = `http://localhost:3500/api/v1/admin/info/current/reservation`;
+    const response = await axios.get(url);
+    if (response.data.success) {
+      setCurrentReservations(response.data.response);
+    }
+  }
+
+  async function fetchUserData() {
+    const token = localStorage.getItem("token");
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    const url = `http://localhost:3500/api/v1/admin/info/user/all`;
+    const response = await axios.get(url);
+    if (response.data.success) {
+      setAllUsers(response.data.result);
+    }
+  }
+
   useEffect(() => {
     document.querySelector(".dashboard").classList.add("active");
+    fetchUserData();
+    fetchReservationData();
     return () => {
-     document.querySelector(".dashboard").classList.remove("active")
+      document.querySelector(".dashboard").classList.remove("active");
+    };
+  }, []);
+
+  useEffect(() => {
+    function calculateTotalSale() {
+      let totalSale = 0;
+      currentReservations.forEach((reservation) => {
+        totalSale += getSpacePrice(reservation.seatID);
+      });
+      setTotalSale(totalSale);
     }
-  }, [])
-  
+    if (currentReservations.length > 0 && allUsers.length > 0) {
+      calculateTotalSale();
+    }
+  }, [currentReservations, allUsers]);
+
+  function getUser(userID) {
+    const user = allUsers.find((user) => user.userID === userID);
+    return user;
+  }
+
+  function getTimeAndDate(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleString();
+  }
+
+  function getDate(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString();
+  }
+
+  function getSpaceType(seatID) {
+    if (seatID >= 10000 && seatID < 20000) {
+      return "Conference Room";
+    } else if (seatID >= 20000 && seatID < 30000) {
+      return "Cubicle";
+    } else if (seatID >= 30000 && seatID < 40000) {
+      return "Hot Seat";
+    } else {
+      return "Private Office";
+    }
+  }
+
+  function getSpacePrice(seatID) {
+    if (seatID >= 10000 && seatID < 20000) {
+      return 300;
+    } else if (seatID >= 20000 && seatID < 30000) {
+      return 600;
+    } else if (seatID >= 30000 && seatID < 40000) {
+      return 1500;
+    } else {
+      return 6000;
+    }
+  }
+
+  const TableRow = (reserveObj) => {
+    const { bookingTime, reservationDate, seatID, userID } = reserveObj;
+    const user = getUser(userID);
+    return (
+      <tr>
+        <td>{getSpaceType(seatID)}</td>
+        <td>{user.phoneNumber}</td>
+        <td>{`${user.firstName} ${user.lastName}`}</td>
+        <td>{getTimeAndDate(bookingTime)}</td>
+        <td>₹{getSpacePrice(seatID)}</td>
+        <td>{seatID}</td>
+        <td>{getDate(reservationDate)}</td>
+      </tr>
+    );
+  };
+
   return (
     <>
       <main>
         <h1>Dashboard</h1>
-        <div class="date">
-          <input type="date" />
-        </div>
 
-        {/* <!-- This div will contain information like sales and everything. I can make it dynamically later. --> */}
         <div class="insights">
-          {/* <!-- Start of sales section --> */}
           <div class="sales">
             <span class="material-icons-sharp">analytics</span>
             <div class="middle">
               <div class="left">
-                <h3>Total Sales</h3>
-                <h1>₹100,000</h1>
-              </div>
-              <div class="progress">
-                <svg>
-                  <circle cx="38" cy="38" r="36"></circle>
-                </svg>
-                <div class="number">
-                  <p>81%</p>
-                </div>
+                <h3>Recent Sales</h3>
+                <h1>₹{totalSale}</h1>
               </div>
             </div>
-            <small class="text-muted">Last 24 Hours</small>
+            <small class="text-muted">Active Reservations</small>
           </div>
-          {/* <!-- End of sales section --> */}
-
-          {/* <!-- Start of expenses section. I can make it seats available and reserved section. --> */}
-          <div class="expenses">
-            <span class="material-icons-sharp">bar_chart</span>
-            <div class="middle">
-              <div class="left">
-                <h3>Total Expenses</h3>
-                <h1>₹23,046</h1>
-              </div>
-              <div class="progress">
-                <svg>
-                  <circle cx="38" cy="38" r="36"></circle>
-                </svg>
-                <div class="number">
-                  <p>33%</p>
-                </div>
-              </div>
-            </div>
-            <small class="text-muted">Last 24 Hours</small>
-          </div>
-
-          {/* <!-- End of expenses section. --> */}
-
-          {/* <!-- Start of income section. --> */}
-
-          <div class="income">
-            <span class="material-icons-sharp">stacked_line_chart</span>
-            <div class="middle">
-              <div class="left">
-                <h3>Total Income</h3>
-                <h1>₹76,954</h1>
-              </div>
-              <div class="progress">
-                <svg>
-                  <circle cx="38" cy="38" r="36"></circle>
-                </svg>
-                <div class="number">
-                  <p>67%</p>
-                </div>
-              </div>
-            </div>
-            <small class="text-muted">Last 24 Hours</small>
-          </div>
-          {/* <!-- End of income section. --> */}
         </div>
-        {/* <!-- End of insights section. --> */}
 
         <div class="recent-reservations">
-          <h2>Recent Reservations</h2>
+          <h2>Current Reservations</h2>
           <table>
             <thead>
               <tr>
                 <th>Reservation Type</th>
                 <th>Contact Number</th>
                 <th>Holder Name</th>
-                <th>Reservation Time</th>
+                <th>Booking Time</th>
                 <th>Payment</th>
                 <th>Seat ID</th>
+                <th>Reservation Date</th>
               </tr>
             </thead>
             <tbody>
-              {/* <!-- I can use a loop to dynamically generate rows here using EJS. --> */}
-              <tr>
-                <td>Cubicle</td>
-                <td>7668722367</td>
-                <td>Dirghayu Joshi</td>
-                <td>21/09/2022 9-17</td>
-                <td>₹800</td>
-                <td>32</td>
-                <td class="primary">Details</td>
-              </tr>
-              <tr>
-                <td>Cubicle</td>
-                <td>7668722367</td>
-                <td>Dirghayu Joshi</td>
-                <td>21/09/2022 9-17</td>
-                <td>₹800</td>
-                <td>32</td>
-                <td class="primary">Details</td>
-              </tr>
-              <tr>
-                <td>Cubicle</td>
-                <td>7668722367</td>
-                <td>Dirghayu Joshi</td>
-                <td>21/09/2022 9-17</td>
-                <td>₹800</td>
-                <td>32</td>
-                <td class="primary">Details</td>
-              </tr>
-              <tr>
-                <td>Cubicle</td>
-                <td>7668722367</td>
-                <td>Dirghayu Joshi</td>
-                <td>21/09/2022 9-17</td>
-                <td>₹800</td>
-                <td>32</td>
-                <td class="primary">Details</td>
-              </tr>
-              <tr>
-                <td>Cubicle</td>
-                <td>7668722367</td>
-                <td>Dirghayu Joshi</td>
-                <td>21/09/2022 9-17</td>
-                <td>₹800</td>
-                <td>32</td>
-                <td class="primary">Details</td>
-              </tr>
+              {currentReservations.map((reservation) => (
+                <TableRow key={uuid()} {...reservation} />
+              ))}
             </tbody>
           </table>
         </div>
