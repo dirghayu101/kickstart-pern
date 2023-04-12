@@ -13,18 +13,51 @@ const Signup = () => {
   const [phoneNumber, setPhoneNumber] = useState('')
  
   const validatedValues = (password, email, firstName, lastName, phoneNumber) => {
-    // Password validation: Should have small character, alphanumeric and a symbol and one character in caps. Put validation for that.
-    if(!password){
-      alert("Password issue.!")
-      return false  //Return false in case the validation fails. DO NOT FORGET.
+    // First Name Validation
+    var namePattern = /^[a-zA-Z]+$/;
+    if(!firstName){
+      alert("First name not entered!")
+      return false;  
+    }
+    if(!namePattern.exec(firstName)) {
+      alert("First name should contain only alphabets");
+      return false;
+    }
+    // Last Name Validation
+    if(!namePattern.exec(lastName)) {
+      alert("Last name should contain only alphabets");
+      return false;
     }
     // Email Validation
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(!email){
       alert("Email not entered!")
       return false  //Return false in case the validation fails. DO NOT FORGET.
     }
-    
-
+    if(!emailPattern.exec(email)) {
+      alert("Invalid email format!");
+      return false;
+    }
+    // Phonenumber validation
+    var phonePattern = /^(?!0{10})\+?\d{10,}$/;
+    if(!phoneNumber){
+      alert("Phone number not entered!")
+      return false;  
+    }
+    if(!phonePattern.exec(phoneNumber)) {
+      alert("Invalid phone number!");
+      return false;
+    }
+    // Password validation: Should have small character, alphanumeric and a symbol and one character in caps. Put validation for that.
+    var pwdPattern =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,10}$/;
+    if(!password){
+      alert("Password not entered!")
+      return false  //Return false in case the validation fails. DO NOT FORGET.
+    }
+    if(!pwdPattern.exec(password)) {
+      alert("Password should have atleast one uppercase character, one lowercase character, one number and one special symbol");
+      return false
+    }
     return true   //Return true only is all the values have been successfully validated.
 
   }

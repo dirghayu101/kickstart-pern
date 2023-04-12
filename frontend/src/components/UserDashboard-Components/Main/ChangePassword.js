@@ -8,13 +8,30 @@ const ChangePassword = () => {
 
 
     function passwordValidated(){
-        
         // Return true if password values pass all validations.
         // oldPassword, newPassword and confirmNewPassword are values that you have to validate. They can be accessed directly in this function as they are declared globally.
         // Send an alert message if there is something lacking in the password.
         // Return true if all validations are successfully.
-        return true;
+    var pwdPattern =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,10}$/;
+    if(!oldPassword || !newPassword || !confirmNewPassword){
+      alert("Enter the fields specified!")
+      return false  
     }
+    if(!pwdPattern.exec(oldPassword)) {
+      alert("Password should have atleast one uppercase character, one lowercase character, one number and one special symbol");
+      return false
+    }
+    if(!pwdPattern.exec(newPassword)) {
+        alert("Password should have atleast one uppercase character, one lowercase character, one number and one special symbol");
+        return false
+    }
+    if (newPassword !== confirmNewPassword) {
+        alert("New password and confirm password do not match!");
+        return false;
+      }
+    return true;
+    }
+
     async function updatePassword(event){
         event.preventDefault();
         try{

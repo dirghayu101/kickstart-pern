@@ -13,8 +13,13 @@ const Login = ({filler, urlPost, urlNavigate}) => {
       alert("Enter the fields specified")
       return false
     }
+    
     // Write the code for email validation. Password validation is not required.
-
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailPattern.exec(email)) {
+      alert("Invalid email format!");
+      return false;
+    }
     return true //Only if all the validations pass
   }
 
