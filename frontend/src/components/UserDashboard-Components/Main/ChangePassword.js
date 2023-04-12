@@ -19,11 +19,11 @@ const ChangePassword = () => {
       return false  
     }
     if(!pwdPattern.exec(oldPassword)) {
-      alert("Password should have atleast one uppercase character, one lowercase character, one number and one special symbol");
+      alert("Password should have at least one uppercase character, one lowercase character, one number and one special symbol");
       return false
     }
     if(!pwdPattern.exec(newPassword)) {
-        alert("Password should have atleast one uppercase character, one lowercase character, one number and one special symbol");
+        alert("Password should have at least one uppercase character, one lowercase character, one number and one special symbol");
         return false
     }
     if (newPassword !== confirmNewPassword) {

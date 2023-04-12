@@ -97,10 +97,9 @@ function CartPage() {
     const urlPost = "http://localhost:3500/api/v1/user/reserve"
     const response = await axios.post(urlPost, {reservation})
     if(response.data.success){
-      console.log(response)
+      localStorage.removeItem("cartData")
       return true
     } else{
-      console.log(response)
       alert("Something went wrong, please try again later!")
       return false
     }

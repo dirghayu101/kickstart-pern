@@ -38,7 +38,7 @@ const Signup = () => {
       alert("Invalid email format!");
       return false;
     }
-    // Phonenumber validation
+    // Phone number validation
     var phonePattern = /^(?!0{10})\+?\d{10,}$/;
     if(!phoneNumber){
       alert("Phone number not entered!")
@@ -55,7 +55,7 @@ const Signup = () => {
       return false  //Return false in case the validation fails. DO NOT FORGET.
     }
     if(!pwdPattern.exec(password)) {
-      alert("Password should have atleast one uppercase character, one lowercase character, one number and one special symbol");
+      alert("Password should have at least one uppercase character, one lowercase character, one number and one special symbol");
       return false
     }
     return true   //Return true only is all the values have been successfully validated.
