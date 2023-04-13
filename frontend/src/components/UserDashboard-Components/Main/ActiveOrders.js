@@ -7,6 +7,7 @@ const ActiveOrders = () => {
   const [activeReservations, setActiveReservations] = useState([]);
 
   useEffect(() => {
+    document.querySelector("table").style.display = "none"
     document.querySelector('.orders').classList.add('active')
     async function fetchReservations() {
       try {
@@ -14,14 +15,17 @@ const ActiveOrders = () => {
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         const url = `http://localhost:3500/api/v1/user/reserve/history/current`;
         const response = await axios.get(url);
-        console.log(response)
-        setActiveReservations(response.data.activeReservationHistory);
+        if(response.data.activeReservationHistory.length){
+          document.querySelector("table").style.display = "initial"
+          setActiveReservations(response.data.activeReservationHistory);
+        }
       } catch (error) {
         console.log("error occurred", error);
       }
     }
     fetchReservations();
     return () => {
+      document.querySelector("table").style.display = "initial"
       document.querySelector('.orders').classList.remove('active');
   };
   }, []);

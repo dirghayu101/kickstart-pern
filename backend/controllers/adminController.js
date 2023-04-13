@@ -90,7 +90,7 @@ module.exports.sendAdminLogin = (req, res) => {
 };
 
 module.exports.authenticateAdmin = catchAsyncError(async (req, res, next) => {
-  const { mailID:admin, password } = req.body;
+  const {mailID:admin, password } = req.body;
   if (!admin || !password) {
     return next(new ErrorHandler(`The request body is empty.`, 400));
   }
@@ -128,9 +128,9 @@ module.exports.sendActiveReservationInformation = catchAsyncError(
     userID = getUserIDScript(userID);
     seatID = getSeatIDScript(seatID);
     sqlQuery = `SELECT "userID", "seatID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted" FROM public."Current-Reservation-Table" WHERE ${space}${status}${dateScript}${tNum}${userID}${seatID}`;
-    console.log(sqlQuery);
     const { rows: dbResult } = await databaseConnection.query(sqlQuery);
     res.status(200).json({
+      success: true,
       message: "Received your request.",
       response: dbResult,
     });
@@ -156,6 +156,7 @@ module.exports.sendOldReservationInformation = catchAsyncError(
     }
     const { rows: dbResult } = await databaseConnection.query(sqlQuery);
     res.status(200).json({
+      success: true,
       message: "Received your request.",
       response: dbResult,
     });
@@ -174,6 +175,7 @@ module.exports.sendUserInformation = catchAsyncError(async (req, res, next) => {
   }
   const { rows: dbResult } = await databaseConnection.query(sqlQuery);
   res.status(200).json({
+    success: true,
     message: "Received your request.",
     result: dbResult,
   });
@@ -200,6 +202,7 @@ module.exports.sendUserReservationInformation = catchAsyncError(
     }
     const { rows: dbResult } = await databaseConnection.query(sqlQuery);
     res.status(200).json({
+      success: true,
       message: "Received your request.",
       result: dbResult,
     });
@@ -228,6 +231,7 @@ module.exports.deleteUserViaAdmin = catchAsyncError(
       return next(new ErrorHandler(`Something went wrong!`, 500));
     }
     res.status(204).json({
+      success: true,
       message: "Resource deleted successfully.",
       result
     });

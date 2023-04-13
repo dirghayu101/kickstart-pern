@@ -39,7 +39,7 @@ const Signup = () => {
       alert("Invalid email format!");
       return false;
     }
-    // Phonenumber validation
+    // Phone number validation
     var phonePattern = /^(?!0{10})\+?\d{10,}$/;
     if(!phoneNumber){
       alert("Phone number not entered!")
