@@ -97,10 +97,9 @@ function CartPage() {
     const urlPost = "http://localhost:3500/api/v1/user/reserve"
     const response = await axios.post(urlPost, {reservation})
     if(response.data.success){
-      console.log(response)
+      localStorage.removeItem("cartData")
       return true
     } else{
-      console.log(response)
       alert("Something went wrong, please try again later!")
       return false
     }
@@ -127,6 +126,15 @@ function CartPage() {
     cartButton.innerHTML = "";
     cartButton.classList.remove("checkout");
   }
+
+  function getCurrentDate() {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  
 
   useEffect(() => {
     setupPageElements();
@@ -187,7 +195,7 @@ function CartPage() {
                       </button>
                     </div>
                     <div className="date">
-                    <input type="date" class="testInput" id={`${item.itemID}`} defaultValue={formattedDate}/>
+                    <input type="date" class="testInput" id={`${item.itemID}`} defaultValue={formattedDate} min={getCurrentDate()}/>
                     </div>
                     <div className="price">
                       <p>{formattedPrice}</p>

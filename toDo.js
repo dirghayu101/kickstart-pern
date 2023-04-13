@@ -1,12 +1,8 @@
 /**
  * 
  * Things to do today:
-
-
--> Make reservation via user.
+-> No phone number repetition.
 -> Update reservation.
 -> feedback post way.
--> Format the reservation table (Orders menu) to make the time look formatted.
--> Orders table should be split in two (active and history one)
 
  */

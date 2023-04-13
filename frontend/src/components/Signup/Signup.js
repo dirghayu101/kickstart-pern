@@ -11,8 +11,9 @@ const Signup = () => {
   const [firstName, setFName] = useState('')
   const [lastName, setLName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
  
-  const validatedValues = (password, email, firstName, lastName, phoneNumber) => {
+  const validatedValues = (password, email, firstName, lastName, phoneNumber, confirmPassword) => {
     // First Name Validation
     var namePattern = /^[a-zA-Z]+$/;
     if(!firstName){
@@ -38,7 +39,7 @@ const Signup = () => {
       alert("Invalid email format!");
       return false;
     }
-    // Phonenumber validation
+    // Phone number validation
     var phonePattern = /^(?!0{10})\+?\d{10,}$/;
     if(!phoneNumber){
       alert("Phone number not entered!")
@@ -49,13 +50,21 @@ const Signup = () => {
       return false;
     }
     // Password validation: Should have small character, alphanumeric and a symbol and one character in caps. Put validation for that.
-    var pwdPattern =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,10}$/;
+    var pwdPattern =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/;
     if(!password){
       alert("Password not entered!")
       return false  //Return false in case the validation fails. DO NOT FORGET.
     }
     if(!pwdPattern.exec(password)) {
-      alert("Password should have atleast one uppercase character, one lowercase character, one number and one special symbol");
+      alert("Password should have atleast one uppercase character, one lowercase character, one number and one special symbol")
+      return false
+    }
+    if(!confirmPassword){
+      alert("Confirm Password not entered!")
+      return false  
+    }
+    if (password !== confirmPassword) {
+      alert("Password and confirm password do not match!")
       return false
     }
     return true   //Return true only is all the values have been successfully validated.
@@ -171,6 +180,8 @@ const Signup = () => {
                 <input
                   type="password"
                   id="sPassword"
+                  value={confirmPassword}
+                  onChange={(e)=>setConfirmPassword(e.target.value)}
                   placeholder="Confirm your password"
                 />
                 <i class="fa-solid fa-circle-check"></i>

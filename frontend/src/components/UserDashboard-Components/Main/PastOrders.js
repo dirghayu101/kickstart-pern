@@ -7,6 +7,7 @@ const PastOrders = () => {
   const [activeReservations, setActiveReservations] = useState([]);
 
   useEffect(() => {
+    document.querySelector("table").style.display = "none"
     document.querySelector('.orders').classList.add('active')
     async function fetchReservations() {
       try {
@@ -15,13 +16,17 @@ const PastOrders = () => {
         const url = `http://localhost:3500/api/v1/user/reserve/history/all`;
         const response = await axios.get(url);
         console.log(response)
-        setActiveReservations(response.data.allReservationHistory);
+        if(response.data.allReservationHistory.length){
+          document.querySelector("table").style.display = "initial"
+          setActiveReservations(response.data.allReservationHistory);
+        }
       } catch (error) {
         console.log("error occurred", error);
       }
     }
     fetchReservations();
     return () => {
+      document.querySelector("table").style.display = "initial"
       document.querySelector('.orders').classList.remove('active');
   };
   }, []);
