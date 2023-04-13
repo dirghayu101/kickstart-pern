@@ -128,6 +128,15 @@ function CartPage() {
     cartButton.classList.remove("checkout");
   }
 
+  function getCurrentDate() {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  
+
   useEffect(() => {
     setupPageElements();
     calculateTotal()
@@ -187,7 +196,7 @@ function CartPage() {
                       </button>
                     </div>
                     <div className="date">
-                    <input type="date" class="testInput" id={`${item.itemID}`} defaultValue={formattedDate}/>
+                    <input type="date" class="testInput" id={`${item.itemID}`} defaultValue={formattedDate} min={getCurrentDate()}/>
                     </div>
                     <div className="price">
                       <p>{formattedPrice}</p>

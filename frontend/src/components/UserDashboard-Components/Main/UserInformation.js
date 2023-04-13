@@ -51,7 +51,7 @@ const UserInformation = () => {
       return false;
     }
     // Password validation: Should have small character, alphanumeric and a symbol and one character in caps. Put validation for that.
-    var pwdPattern =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,10}$/;
+    var pwdPattern =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/;
     if(!password){
       alert("Password not entered!")
       return false  //Return false in case the validation fails. DO NOT FORGET.
