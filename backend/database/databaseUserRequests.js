@@ -68,12 +68,18 @@ module.exports.updatePassword = async (userID, newPassword) => {
   return result;
 };
 
+// module.exports.updateUserRequestAdmin = async (req) => {
+//   const userID = req.query.id || req.user[0].userID
+//   const getUserQuery =  `SELECT  "firstName", "phoneNumber", "mailID" FROM public."User" WHERE "userID"='${userID}'`
+//   const {rows:userInfo} = databaseConnection.query(getUserQuery)
+
+// }
+
 module.exports.updateUserInformationRequest = async (req) => {
-  const { firstName, lastName, phoneNumber, gender } = req.body;
+  const { firstName, lastName, phoneNumber, mailID } = req.body;
   const userID = req.query.id || req.user[0].userID 
   const updateScript = `UPDATE public."User"
-	SET  "phoneNumber"='${phoneNumber}', "firstName"='${firstName}', "lastName"='${lastName}', gender='${gender}'
-	WHERE "userID" = '${userID}'`;
+	SET  "phoneNumber"='${phoneNumber}', "firstName"='${firstName}', "lastName"='${lastName}', "mailID"='${mailID}' WHERE "userID" = '${userID}'`;
   let result;
   try {
     result = await databaseConnection.query(updateScript);

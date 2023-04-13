@@ -21,6 +21,26 @@ module.exports.checkUserDoesNotExist = catchAsyncError(async (req, res, next) =>
     return next()
 })
 
+module.exports.runAdminUpdateUserValidation = catchAsyncError(async (req, res, next) => {
+    let userKeys = Object.keys(req.body)
+    userKeys.forEach((key) => {
+        if(validator.isEmpty(String(req.body[key]))){
+            return next(new ErrorHandler(`Input values of user are invalid.`, 400))
+        }
+    })
+    const { firstName, lastName, phoneNumber, mailID} = req.body
+    if(!validator.isEmail(mailID)){
+        return next(new ErrorHandler(`Input values of user are invalid.`, 400))
+    }
+    if(!(validator.isAlpha(firstName) && validator.isAlpha(lastName))){
+        return next(new ErrorHandler(`Input values of user are invalid.`, 400))
+    }
+    if(!validator.isInt(String(phoneNumber))){
+        return next(new ErrorHandler(`Input values of user are invalid.`, 400))
+    }
+    return next()
+})
+
 module.exports.runValidationUser = catchAsyncError(async (req, res, next) => {
    let userKeys = Object.keys(req.body)
     userKeys.forEach((key) => {

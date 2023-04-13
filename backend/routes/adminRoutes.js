@@ -16,7 +16,7 @@ const {
   sendUserReservationInformation,
   getAllFeedback
 } = require("../controllers/adminController");
-const {checkUserDoesNotExist, runValidationUser, checkUserDoExist, verifyUserPassword, checkUserDoExistQueryParams} =  require("../middleware/validationMiddleware");
+const {checkUserDoesNotExist, runValidationUser, checkUserDoExist, verifyUserPassword, checkUserDoExistQueryParams, runAdminUpdateUserValidation} =  require("../middleware/validationMiddleware");
 const { updateCurrentAndAllReservationTable } = require("../database/reservationTablePopulateUtils");
 const { isAuthenticatedAdmin } = require("../middleware/authorization");
 
@@ -46,7 +46,7 @@ router
   .route("/modify/row/user")
   .post(isAuthenticatedAdmin, updateCurrentAndAllReservationTable,  checkUserDoesNotExist, runValidationUser, addUserViaAdmin)
   .delete(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, checkUserDoExistQueryParams, deleteUserViaAdmin)
-  .patch(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, runValidationUser, checkUserDoExistQueryParams, updateUserViaAdmin);
+  .patch(isAuthenticatedAdmin, updateCurrentAndAllReservationTable, runAdminUpdateUserValidation, checkUserDoExistQueryParams, updateUserViaAdmin);
 // CRUD user in the database
 
 // TODO: Get information about all the spaces available.

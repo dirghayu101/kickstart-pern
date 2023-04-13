@@ -215,6 +215,7 @@ module.exports.addUserViaAdmin = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler(`Something went wrong!`, 500));
   }
   res.status(201).json({
+    success: true,
     message: "Successfully created a new user!",
     result: boolInsert,
   });
@@ -230,7 +231,7 @@ module.exports.deleteUserViaAdmin = catchAsyncError(
     if(!result){
       return next(new ErrorHandler(`Something went wrong!`, 500));
     }
-    res.status(204).json({
+    res.status(202).json({
       success: true,
       message: "Resource deleted successfully.",
       result
