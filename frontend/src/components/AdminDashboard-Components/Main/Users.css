@@ -1,0 +1,56 @@
+.delete-row:hover {
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 500ms ease;
+}
+
+/*.edit-button{
+    display: none;
+} */
+.edit-button,
+.save-button,
+.add-button {
+    font-size: 1.5rem;
+    transition: all 500ms ease;
+}
+
+.add-button:hover {
+    cursor: pointer;
+    transition: all 500ms ease;
+    color: green;
+}
+
+.edit-button:hover {
+    cursor: pointer;
+    transition: all 500ms ease;
+    color: rgba(0, 221, 255, 0.475);
+
+}
+
+.save-button:hover {
+    cursor: pointer;
+    transition: all 500ms ease;
+    color: rgb(10, 191, 10);
+}
+
+main {
+    padding-top: 5vh;
+}
+
+.user-row {
+    z-index: 1;
+}
+
+.user-row td {
+    z-index: -1;
+}
+
+.second-table {
+    margin-top: 8vh;
+}
+
+.second-table td input {
+    border: 0.5px dotted black;
+    height: 2rem;
+    padding: 8px;
+}
