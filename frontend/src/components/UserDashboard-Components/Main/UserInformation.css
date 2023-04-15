@@ -29,7 +29,7 @@
   }
   
 
-  button {
+  #dashboardSwitchButton {
     background-color: #0077b6;
     color: #fff;
     padding: 10px 20px;
@@ -40,7 +40,7 @@
     margin-top: 20px;
   }
   
-  button:hover {
+  #dashboardSwitchButton:hover {
     background-color: #023e8a;
   }
  

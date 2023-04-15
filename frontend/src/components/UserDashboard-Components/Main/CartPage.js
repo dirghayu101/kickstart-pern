@@ -98,6 +98,7 @@ function CartPage() {
     const response = await axios.post(urlPost, {reservation})
     if(response.data.success){
       localStorage.removeItem("cartData")
+      navigate("/user/pay");
       return true
     } else{
       alert("Something went wrong, please try again later!")
@@ -112,11 +113,7 @@ function CartPage() {
     cartButton.classList.add("checkout");
     cartButton.addEventListener('click', async (event) => {
       event.preventDefault();
-      if(await insertInDatabase()){
-        navigate("/user/pay");
-      }else{
-        return
-      }
+      await insertInDatabase()
     })
   }
 
@@ -215,38 +212,3 @@ function CartPage() {
   );
 }
 export default CartPage;
-
-
-/*
-[ 
-  {
-      "itemID": "Private_Office",
-      "value": 3,
-      "reserveDate": "2023-04-22"
-  },
-  {
-      "itemID": "Hot_Seat",
-      "value": 7,
-      "reserveDate": "2023-04-28"
-  },
-  {
-      "itemID": "Cubicle",
-      "value": 2,
-      "reserveDate": "2023-04-12"
-  },
-  {
-      "itemID": "Conference_Room",
-      "value": 1,
-      "reserveDate": "2023-04-17"
-  },
-]
-
-{
-  "Private-Office": ["2023-04-22", "2023-04-22", "2023-04-22"],
-  "Hot-Seat": ["2023-04-28", "2023-04-28", "2023-04-28", "2023-04-28", "2023-04-28", "2023-04-28", "2023-04-28"],
-  "Cubicle":["2023-04-12", "2023-04-12"],
-  "Conference-Room":["2023-04-17"]
-}
-
-*/
-

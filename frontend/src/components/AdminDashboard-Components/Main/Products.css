@@ -1,0 +1,25 @@
+#getDateBtn{
+    background-color: #72c965df;
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.897);
+    cursor: pointer;
+    font-size: 14px;
+    height: 36px;
+    line-height: 27px;
+    min-width: 54px;
+    padding: 0 16px;
+    text-align: center;
+    touch-action: manipulation;
+    white-space: pre;
+    margin-left: 20px;
+    transition: 0.5s ease;
+}
+
+#getDateBtn:hover{
+    background-color: #60ab54;
+    transition: 0.5s ease;
+}
+
+#dateInput{
+    border: 0.1px solid rgba(0, 0, 0, 0);
+}

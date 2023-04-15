@@ -14,17 +14,23 @@ const {
   modifySpaceTablesViaAdmin,
   sendOldReservationInformation,
   sendUserReservationInformation,
-  getAllFeedback
+  getAllFeedback,
+  sendSpaceCapacity
 } = require("../controllers/adminController");
 const {checkUserDoesNotExist, runValidationUser, checkUserDoExist, verifyUserPassword, checkUserDoExistQueryParams, runAdminUpdateUserValidation} =  require("../middleware/validationMiddleware");
 const { updateCurrentAndAllReservationTable } = require("../database/reservationTablePopulateUtils");
 const { isAuthenticatedAdmin } = require("../middleware/authorization");
+const { sendSpacesAvailable } = require("../controllers/userReservationController");
 
 const router = express.Router();
 
 router.route("/suman-kickstart").get(sendAdminLogin).post(authenticateAdmin);
 router.route("/logout").get(isAuthenticatedAdmin, logoutAdmin);
 
+
+router.route('/info/reservation/spaceCapacity').get(isAuthenticatedAdmin, sendSpaceCapacity)
+
+router.route('/info/reservation/spaceAvailable/:date').get(isAuthenticatedAdmin, sendSpacesAvailable)
 
 router
   .route("/info/current/reservation")

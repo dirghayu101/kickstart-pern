@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import AllOrders from "./AllOrders";
 import CurrentOrders from "./CurrentOrders";
+import "./Orders.css"
 
 // In orders admin should be able to modify recent reservation. Like delete and update. Even see all reservations ever and the users who performed all those.
 const Orders = () => {
@@ -24,7 +25,7 @@ const Orders = () => {
 
   return (
     <main>
-      <button onClick={swapComponent}>{buttonText}</button>
+      <button id="orderPageBtn" onClick={swapComponent}>{buttonText}</button>
       <br />
       <br />
       {showCurrentOrders ? <CurrentOrders /> : <AllOrders />}

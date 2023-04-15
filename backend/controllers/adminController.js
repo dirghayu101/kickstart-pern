@@ -222,6 +222,20 @@ module.exports.addUserViaAdmin = catchAsyncError(async (req, res, next) => {
   });
 });
 
+module.exports.sendSpaceCapacity = catchAsyncError(async (req, res, next) => {
+  const spaces = ["Conference-Room", "Cubicle", "Hot-Seat", "Private-Office"]
+  const spaceObj = {}
+  for (const space of spaces) {
+    const selectQuery = `SELECT "isBookedBoolean" FROM public."${space}"`
+    const {rows} = await databaseConnection.query(selectQuery)
+    spaceObj[space] = rows.length
+  }
+  res.status(201).json({
+    success: true,
+    spaceObj
+  })
+})
+
 module.exports.deleteUserViaAdmin = catchAsyncError(
   async (req, res, next) => {
     let userID = req.query.id
