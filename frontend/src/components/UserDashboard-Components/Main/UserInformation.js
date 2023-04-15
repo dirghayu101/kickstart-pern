@@ -148,7 +148,7 @@ const UserInformation = () => {
         <input type="password" value={password} onChange={(event) => setCurrentPassword(event.target.value)}/>
       </label>
     </form>
-    <button onClick={handleClick}>Update</button>
+    <button id="updateBtn" onClick={handleClick}>Update</button>
   </>;
 };
 

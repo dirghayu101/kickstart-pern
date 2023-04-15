@@ -1,0 +1,62 @@
+#feedbackForm{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+#feedbackForm>button{
+    height: 33px;
+    width: 84px;
+    font-size: 14px;
+    border-radius: 14px;
+    color: white;
+    background-color: rgba(5, 155, 15, 0.853);
+    transition: all 0.4s;
+}
+
+#feedbackForm>button:hover{
+    background-color: rgba(5, 155, 15, 0.579);
+    cursor: pointer;
+    transition: all 0.4s;
+}
+
+#feedbackForm>h2{
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.reservation-option{
+    font-size:12px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.reservation-option>label{
+    font-size: 14px;
+    color: rgba(29, 29, 29, 0.585);
+
+}
+
+#reservation-select{
+    border: 0.1px solid rgb(88, 88, 88);
+    width: 220px;
+    padding:auto;
+    height: 30px;
+    text-align: center;
+    color: rgb(158, 155, 155);
+    font-weight: 20;
+    margin-bottom: 20px;
+    margin-left: 30px;
+}
+
+#reservation-select:focus{
+    color: black;
+}
+
+#feedbackForm>textarea{
+    padding: 7px;
+    border: 0.1px solid rgb(88, 88, 88);
+    margin-bottom: 17px;
+}

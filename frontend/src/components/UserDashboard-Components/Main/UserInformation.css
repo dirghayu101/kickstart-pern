@@ -48,5 +48,20 @@
     background-color: #F5F5F5;
   } 
   
+  #updateBtn{
+    width: 100px;
+    font-size: 16px;
+    background-color: rgba(5, 155, 15, 0.853);
+    border-radius: 10px;
+    height: 33px;
+    color: white;
+    transition: all 0.4s;
+  }
+
+  #updateBtn:hover{
+    background-color: rgba(5, 155, 15, 0.579);
+    cursor: pointer;
+    transition: all 0.4s;
+  }
   
   

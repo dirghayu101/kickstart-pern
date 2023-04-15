@@ -72,7 +72,7 @@ router
   );
 
 router
-  .route("/reserve/feedback")
+  .route("/reserve/post/feedback")
   .post(isAuthenticatedUser, postReservationFeedback);
 
 module.exports = router;

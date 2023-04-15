@@ -20,7 +20,7 @@ const Home = () => {
   const buttonText = showUserInfo ? "Change Password" : "Update My Information"
 
   return <>
-    <button onClick={swapComponent}>{buttonText}</button>
+    <button id="dashboardSwitchButton" onClick={swapComponent}>{buttonText}</button>
     <br/>
     <br/>
     {showUserInfo ? <UserInformation/> : <ChangePassword/>}

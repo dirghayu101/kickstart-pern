@@ -219,9 +219,8 @@ module.exports.postReservationFeedback = catchAsyncError(
     const { seatNum, rating, comment } = req.body;
     const { userID } = req.user[0];
     const insertScript = `INSERT INTO public."Reservation-Feedback"(
-      "userID", "seatNum", rating, comment)
+      "userID", "seatNum", rating, "comment")
       VALUES ('${userID}', '${seatNum}', ${rating}, '${comment}');`;
-    console.log(insertScript);
     await databaseConnection.query(insertScript);
     res.status(201).json({
       success: true,

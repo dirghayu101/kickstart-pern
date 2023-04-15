@@ -82,7 +82,7 @@ const ChangePassword = () => {
                 </label>
                 <br/>
             </form>
-            <button onClick={updatePassword}>Update</button>
+            <button id="updateBtn" onClick={updatePassword}>Update</button>
         </>
     )
 }
