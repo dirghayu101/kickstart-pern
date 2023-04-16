@@ -2,7 +2,7 @@ const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const databaseConnection = require("../database/connection");
 const { v1: generateReservationID } = require("uuid");
-const moment = require('moment-timezone')
+const moment = require("moment-timezone");
 const allSpaces = [
   "Conference-Room",
   "Cubicle",
@@ -50,11 +50,27 @@ async function getAllSeatsForDate(date) {
   return seatObject;
 }
 
+function getTimestamp() {
+  const date = new Date();
+  const options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZone: "Asia/Kolkata",
+    hour12: false,
+  };
+  return date.toLocaleString("en-US", options);
+}
+
 async function insertInCurrentReservationTable(userID, seat, transID, date) {
   const reservationID = generateReservationID();
+  const bookingTime = getTimestamp();
   const insertScript = `INSERT INTO public."Current-Reservation-Table"(
-        "userID", "seatID", "reservationID", "transactionNumber", "reservationDate")
-        VALUES ('${userID}', '${seat}', '${reservationID}', '${transID}', '${date}');`;
+        "userID", "seatID", "reservationID", "transactionNumber", "reservationDate", "bookingTime")
+        VALUES ('${userID}', '${seat}', '${reservationID}', '${transID}', '${date}', '${bookingTime}');`;
   await databaseConnection.query(insertScript);
 }
 
@@ -151,32 +167,40 @@ module.exports.userMakeReservation = catchAsyncError(async (req, res, next) => {
 });
 
 module.exports.cancelReservation = catchAsyncError(async (req, res, next) => {
-  const {transactionNumber, userID, seatID, reservationID, wasMuted} = req.reservationInfo[0]
-  const reservationDate = moment(req.reservationInfo[0].reservationDate).format('YYYY-MM-DD')
-  const bookingTime = moment.utc(req.reservationInfo[0].bookingTime).tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss')
+  const { transactionNumber, userID, seatID, reservationID, wasMuted } =
+    req.reservationInfo[0];
+  const reservationDate = moment(req.reservationInfo[0].reservationDate).format(
+    "YYYY-MM-DD"
+  );
+  const bookingTime = moment
+    .utc(req.reservationInfo[0].bookingTime)
+    .tz("Asia/Kolkata")
+    .format("YYYY-MM-DD HH:mm:ss");
   const insertScript = `INSERT INTO public."All-Reservation-Table"(
     "transactionNumber", "userID", "seatID", "reservationID", "wasMuted", "reservationDate", "bookingTime", "reservationStatus")
-    VALUES ('${transactionNumber}', '${userID}', '${seatID}', '${reservationID}', '${wasMuted}', '${reservationDate}', '${bookingTime}', false);`
-  await databaseConnection.query(insertScript)
-  const deleteScript = `DELETE FROM public."Current-Reservation-Table" WHERE "reservationID" = '${reservationID}'`
-  await databaseConnection.query(deleteScript)
+    VALUES ('${transactionNumber}', '${userID}', '${seatID}', '${reservationID}', '${wasMuted}', '${reservationDate}', '${bookingTime}', false);`;
+  await databaseConnection.query(insertScript);
+  const deleteScript = `DELETE FROM public."Current-Reservation-Table" WHERE "reservationID" = '${reservationID}'`;
+  await databaseConnection.query(deleteScript);
   res.status(201).json({
-    message: "We are processing your cancellation, you will receive your refund in 5-7 business days.",
+    success: true,
+    message:
+      "We are processing your cancellation, you will receive your refund in 5-7 business days.",
   });
 });
 
 module.exports.updateReservation = catchAsyncError(async (req, res, next) => {
-  const {seatID, wasMuted, reservationID} = req.reservationInfo[0]
-  if(wasMuted){
-    return next(new ErrorHandler('You cannot update more than once.', 401))
+  const { seatID, wasMuted, reservationID } = req.reservationInfo[0];
+  if (wasMuted) {
+    return next(new ErrorHandler("You cannot update more than once.", 401));
   }
-  const {newDate} = req.body
-  const space =  getSpaceType(seatID)
-  const {seatID:seatNum} = await getSeatNumber(space, newDate)
+  const { newDate } = req.body;
+  const space = getSpaceType(seatID);
+  const { seatID: seatNum } = await getSeatNumber(space, newDate);
   const updateScript = `UPDATE public."Current-Reservation-Table"
 	SET "seatID"='${seatNum}', "reservationDate"='${newDate}', "wasMuted"=true
-	WHERE "reservationID"='${reservationID}';`
-  await databaseConnection.query(updateScript)
+	WHERE "reservationID"='${reservationID}';`;
+  await databaseConnection.query(updateScript);
   res.status(201).json({
     message: "Request received at the update reservation route.",
   });
@@ -229,14 +253,14 @@ module.exports.postReservationFeedback = catchAsyncError(
   }
 );
 
-function getSpaceType(seatID){
-  if(seatID >= 10000 && seatID < 20000){
-    return "Conference-Room"
-  } else if(seatID >= 20000 && seatID < 30000){
-    return "Cubicle"
-  } else if(seatID >= 30000 && seatID < 40000){
-    return "Hot-Seat"
-  } else{
-    return "Private-Office"
+function getSpaceType(seatID) {
+  if (seatID >= 10000 && seatID < 20000) {
+    return "Conference-Room";
+  } else if (seatID >= 20000 && seatID < 30000) {
+    return "Cubicle";
+  } else if (seatID >= 30000 && seatID < 40000) {
+    return "Hot-Seat";
+  } else {
+    return "Private-Office";
   }
 }

@@ -20,7 +20,7 @@ const router = express.Router();
 const {
   isAuthenticatedUser,
   cancelValidations,
-  validateUpdateRequest
+  validateUpdateRequest,
 } = require("../middleware/authorization");
 const { handlePayment } = require("../middleware/payment");
 
@@ -33,8 +33,7 @@ router.route("/space").get(isAuthenticatedUser, sendFilterSpace);
 // This route will be used for making the reservation.
 router
   .route("/reserve")
-  .post(isAuthenticatedUser, handlePayment, userMakeReservation)
-  .delete(isAuthenticatedUser, cancelReservation);
+  .post(isAuthenticatedUser, handlePayment, userMakeReservation);
 
 // This route will be used for deleting the reservation. We created a separate delete route because:
 // 1. Delete method shouldn't have any body.
@@ -46,13 +45,13 @@ router
     updateCurrentAndAllReservationTable,
     cancelValidations,
     updateReservation
-  ).delete(
+  )
+  .delete(
     isAuthenticatedUser,
     updateCurrentAndAllReservationTable,
     cancelValidations,
     cancelReservation
-  )
-
+  );
 
 // NOTE: A user should not be able to exploit this route and get the history of every user in the database.
 router

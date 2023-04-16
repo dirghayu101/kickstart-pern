@@ -27,16 +27,18 @@ exports.isAuthenticatedUser = catchAsyncError(async (req, res, next) => {
 });
 
 exports.isAuthenticatedAdmin = catchAsyncError(async (req, res, next) => {
-    let token = req.cookies.token;
-    if (!token) {
-      const authHeader = req.headers.authorization;
-      if (authHeader && authHeader.startsWith('Bearer ')) {
-        token = authHeader.split(' ')[1];
-      }
+  let token = req.cookies.token;
+  if (!token) {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
     }
-    if (!token) {
-      return next(new ErrorHandler('Please login to access these resources', 401));
-    }
+  }
+  if (!token) {
+    return next(
+      new ErrorHandler("Please login to access these resources", 401)
+    );
+  }
   const jwtVerified = jwt.verify(token, process.env.JWT_SECRET_ADMIN);
   if (jwtVerified) {
     return next();
@@ -59,7 +61,14 @@ function getCurrentTimestamp() {
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 
-function dateInvalid(rows) {
+function dateInvalid(rows, next) {
+  if (rows[0].wasMuted) {
+    return next(
+      new ErrorHandler(
+        "A modified reservation cannot be cancelled. Contact the owner."
+      )
+    );
+  }
   const date = moment(rows[0].reservationDate).format("YYYY-MM-DD") + " 00:00";
   const rowTimeStamp = new Date(date).getTime() / 3600000;
   const currentTimeStamp = new Date(getCurrentTimestamp()).getTime() / 3600000;
@@ -81,7 +90,7 @@ exports.cancelValidations = catchAsyncError(async (req, res, next) => {
       new ErrorHandler("Invalid action, reservation doesn't exist.", 400)
     );
   }
-  if (dateInvalid(rows)) {
+  if (dateInvalid(rows, next)) {
     return next(
       new ErrorHandler(
         "You can only update or cancel your reservation 12 hours prior. Contact the owner."

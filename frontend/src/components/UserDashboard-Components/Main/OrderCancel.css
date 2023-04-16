@@ -1,0 +1,74 @@
+#orderCancelStyle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#orderCancelStyle > img {
+  height: 40vh;
+  width: 55%;
+  margin: 20px 0;
+}
+
+#orderCancelStyle > table {
+  width: 55%;
+  border: 0.2px solid rgb(128, 128, 128);
+}
+
+#orderCancelBtns {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 10vh;
+  width: 100%;
+}
+
+#orderCancelBtns > button {
+  width: 108px;
+  height: 35px;
+  border-radius: 20px;
+  transition: 0.2s all;
+  color: white;
+}
+
+#requestService {
+  background-color: green;
+}
+
+#requestService:hover {
+  background-color: rgba(32, 180, 32, 0.698);
+  transition: 0.2s all;
+}
+
+#cancelReservation {
+  background-color: rgba(255, 0, 0, 0.871);
+}
+
+#cancelReservation:hover {
+  background-color: rgba(255, 0, 0, 0.498);
+}
+
+#outerNavigateCancel {
+  width: 100%;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#navigateToSupport {
+  width: 135px;
+  height: 40px;
+  font-size: 13px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  color: grey;
+  transition: 0.2s all;
+}
+
+#navigateToSupport:hover {
+  scale: 1.01;
+  color: green;
+  border: 1.2px solid green;
+  transition: 0.2s all;
+}
