@@ -202,7 +202,8 @@ module.exports.updateReservation = catchAsyncError(async (req, res, next) => {
 	WHERE "reservationID"='${reservationID}';`;
   await databaseConnection.query(updateScript);
   res.status(201).json({
-    message: "Request received at the update reservation route.",
+    success: true,
+    message: "Reservation updated successfully!",
   });
 });
 

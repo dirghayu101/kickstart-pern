@@ -59,7 +59,7 @@ const OrderCancel = (reservation) => {
       return;
     }
     await cancelOrder();
-    // window.location.reload();
+    window.location.reload();
   };
 
   const cancelOrder = async () => {
