@@ -3,11 +3,14 @@ const databaseConnection = require("../database/connection");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { insertUser, updateUserInformationRequest } = require("../database/databaseUserRequests");
+const {
+  insertUser,
+  updateUserInformationRequest,
+} = require("../database/databaseUserRequests");
 
 const spaceAndSeatID = {
   "Conference-Room": 10000,
-  "Cubicle": 20000,
+  Cubicle: 20000,
   "Hot-Seat": 30000,
   "Private-Office": 40000,
 };
@@ -91,7 +94,7 @@ module.exports.sendAdminLogin = (req, res) => {
 
 module.exports.authenticateAdmin = catchAsyncError(async (req, res, next) => {
   const { password } = req.body;
-  const admin = req.body.mailID || req.body.admin
+  const admin = req.body.mailID || req.body.admin;
   if (!admin || !password) {
     return next(new ErrorHandler(`The request body is empty.`, 400));
   }
@@ -111,10 +114,14 @@ module.exports.authenticateAdmin = catchAsyncError(async (req, res, next) => {
       ),
       httpOnly: true,
     };
-    res.status(200).header('Authorization', `Bearer ${token}`).cookie("token", token, cookieOptions).json({
-      success: true,
-      token,
-    });
+    res
+      .status(200)
+      .header("Authorization", `Bearer ${token}`)
+      .cookie("token", token, cookieOptions)
+      .json({
+        success: true,
+        token,
+      });
   }
 });
 
@@ -223,57 +230,53 @@ module.exports.addUserViaAdmin = catchAsyncError(async (req, res, next) => {
 });
 
 module.exports.sendSpaceCapacity = catchAsyncError(async (req, res, next) => {
-  const spaces = ["Conference-Room", "Cubicle", "Hot-Seat", "Private-Office"]
-  const spaceObj = {}
+  const spaces = ["Conference-Room", "Cubicle", "Hot-Seat", "Private-Office"];
+  const spaceObj = {};
   for (const space of spaces) {
-    const selectQuery = `SELECT "isBookedBoolean" FROM public."${space}"`
-    const {rows} = await databaseConnection.query(selectQuery)
-    spaceObj[space] = rows.length
+    const selectQuery = `SELECT "isBookedBoolean" FROM public."${space}"`;
+    const { rows } = await databaseConnection.query(selectQuery);
+    spaceObj[space] = rows.length;
   }
   res.status(201).json({
     success: true,
-    spaceObj
-  })
-})
+    spaceObj,
+  });
+});
 
-module.exports.deleteUserViaAdmin = catchAsyncError(
-  async (req, res, next) => {
-    let userID = req.query.id
-    let sqlScript = `DELETE FROM public."User"
-    WHERE "userID" = '${userID}';`
-    let {rowCount: result} = await databaseConnection.query(sqlScript)
+module.exports.deleteUserViaAdmin = catchAsyncError(async (req, res, next) => {
+  let userID = req.query.id;
+  let sqlScript = `DELETE FROM public."User"
+    WHERE "userID" = '${userID}';`;
+  let { rowCount: result } = await databaseConnection.query(sqlScript);
 
-    if(!result){
-      return next(new ErrorHandler(`Something went wrong!`, 500));
-    }
-    res.status(202).json({
-      success: true,
-      message: "Resource deleted successfully.",
-      result
-    });
+  if (!result) {
+    return next(new ErrorHandler(`Something went wrong!`, 500));
   }
-);
+  res.status(202).json({
+    success: true,
+    message: "Resource deleted successfully.",
+    result,
+  });
+});
 
-module.exports.updateUserViaAdmin = catchAsyncError(
-  async (req, res, next) => {
-    const result = await updateUserInformationRequest(req)
-    if (!result) {
-      return next(new ErrorHandler(`Something went wrong!`, 500));
-    }
-    res.status(200).json({
-      success: true,
-      message: `Updated user information successfully!`,
-      result,
-    });
+module.exports.updateUserViaAdmin = catchAsyncError(async (req, res, next) => {
+  const result = await updateUserInformationRequest(req);
+  if (!result) {
+    return next(new ErrorHandler(`Something went wrong!`, 500));
   }
-);
+  res.status(200).json({
+    success: true,
+    message: `Updated user information successfully!`,
+    result,
+  });
+});
 
 module.exports.makeReservationViaAdmin = catchAsyncError(
   async (req, res, next) => {
     res.status(200).json({
       success: true,
-      message: "Received your request in make reservation via admin route."
-    })
+      message: "Received your request in make reservation via admin route.",
+    });
   }
 );
 
@@ -281,8 +284,8 @@ module.exports.cancelReservationViaAdmin = catchAsyncError(
   async (req, res, next) => {
     res.status(200).json({
       success: true,
-      message: "Received your request in cancel reservation via admin route."
-    })
+      message: "Received your request in cancel reservation via admin route.",
+    });
   }
 );
 
@@ -290,18 +293,18 @@ module.exports.modifyReservationViaAdmin = catchAsyncError(
   async (req, res, next) => {
     res.status(200).json({
       success: true,
-      message: "Received your request in update reservation via admin route."
-    })
+      message: "Received your request in update reservation via admin route.",
+    });
   }
 );
 
 module.exports.modifySpaceTablesViaAdmin = catchAsyncError(
   async (req, res, next) => {
-    
     res.status(200).json({
       success: true,
-      message: "Received your request in modify space table structure via admin route."
-    })
+      message:
+        "Received your request in modify space table structure via admin route.",
+    });
   }
 );
 
@@ -316,11 +319,42 @@ module.exports.logoutAdmin = catchAsyncError(async (req, res, next) => {
   });
 });
 
-module.exports.getAllFeedback = catchAsyncError(async (req, res, next) => {
-  const result = await databaseConnection.query(`SELECT "userID", "seatNum", rating, comment, "time"
-	FROM public."Reservation-Feedback"`)
+module.exports.getUnreadFeedbacks = catchAsyncError(async (req, res, next) => {
+  const { rows: result } = await databaseConnection.query(
+    `SELECT * FROM public."Reservation-Feedback" WHERE "feedbackRead"=false`
+  );
   res.status(200).json({
     success: true,
-    feedback: result
+    feedback: result,
+    length: result.length,
   });
-})
+});
+
+module.exports.getReadFeedbacks = catchAsyncError(async (req, res, next) => {
+  const { rows: result } = await databaseConnection.query(
+    `SELECT * FROM public."Reservation-Feedback" WHERE "feedbackRead"=true`
+  );
+  res.status(200).json({
+    success: true,
+    feedback: result,
+    length: result.length,
+  });
+});
+
+module.exports.markFeedbackCellAsRead = catchAsyncError(
+  async (req, res, next) => {
+    const feedbackID = req.params.feedbackID;
+    const updateScript = `UPDATE public."Reservation-Feedback"
+	SET "feedbackRead"=true
+	WHERE "feedbackID"='${feedbackID}';`;
+    const result = await databaseConnection.query(updateScript);
+    console.log(result);
+    if (result) {
+      res.status(200).json({
+        success: true,
+      });
+    } else {
+      return next(new ErrorHandler(`Something went wrong!`, 500));
+    }
+  }
+);

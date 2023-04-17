@@ -88,7 +88,7 @@ const OrderCancel = (reservation) => {
   return (
     <>
       {sendFeedback ? (
-        <SpaceInstruction />
+        <SpaceInstruction {...reservation} />
       ) : (
         <>
           <div id="orderCancelStyle">

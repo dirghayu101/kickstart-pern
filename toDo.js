@@ -7,7 +7,8 @@ User dashboard things:
 4. Update reservation functionality in reschedule option of user dashboard.
 
 Admin dashboard things:
-1. Feedback and other message display for admin. Like people who cancelled.
+1. Feedback and other message display for admin. Like people who cancelled.  There should be a button like mark as read in the messages which will set boolean to false and the same feedback won't be shown again. And there will be an all feedbacks button which will show all reservation no matter what. And I will sort reservations before showing them. Later I will add a functionality in the user side as such that it will send a post request to admin as well if in case user updates or cancels a reservation. Then I will add functionality to update the messages popup in the Aside component.
+
 2. Product display like all the seats remaining and similar things in product option.
 3. Add user functionality in admin. (DONE)
 4. In settings menu, admin should be able to delete any space table and even create a new space table.

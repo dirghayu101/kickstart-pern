@@ -1,7 +1,7 @@
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const databaseConnection = require("../database/connection");
-const { v1: generateReservationID } = require("uuid");
+const { v1: generateReservationID, v4: generateFeedbackID } = require("uuid");
 const moment = require("moment-timezone");
 const allSpaces = [
   "Conference-Room",
@@ -242,11 +242,15 @@ module.exports.activeReservationHistory = catchAsyncError(
 module.exports.postReservationFeedback = catchAsyncError(
   async (req, res, next) => {
     const { seatNum, rating, comment } = req.body;
+    const rID = generateFeedbackID();
+    const feedbackTime = getTimestamp();
     const { userID } = req.user[0];
+
     const insertScript = `INSERT INTO public."Reservation-Feedback"(
-      "userID", "seatNum", rating, "comment")
-      VALUES ('${userID}', '${seatNum}', ${rating}, '${comment}');`;
-    await databaseConnection.query(insertScript);
+  "userID", "seatNum", rating, "comment", "time", "feedbackID")
+  VALUES ($1, $2, $3, $4, $5, $6);`;
+    const values = [userID, seatNum, rating, comment, feedbackTime, rID];
+    await databaseConnection.query(insertScript, values);
     res.status(201).json({
       success: true,
       message: "Your response has been received successfully!.",
