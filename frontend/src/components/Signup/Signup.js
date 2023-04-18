@@ -13,14 +13,14 @@ const Signup = () => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
  
-  const validatedValues = (password, email, firstName, lastName, phoneNumber, confirmPassword) => {
+  const validatedValues = (firstName, lastName, email, phoneNumber, password, confirmPassword) => {
     // First Name Validation
     var namePattern = /^[a-zA-Z]+$/;
     if(!firstName){
       alert("First name not entered!")
       return false;  
     }
-    if(!namePattern.exec(firstName)) {
+    if(!namePattern.test(firstName)) {
       alert("First name should contain only alphabets");
       return false;
     }
@@ -75,7 +75,7 @@ const Signup = () => {
     event.preventDefault()
     let response
     try {
-      if(!validatedValues(password, email, firstName, lastName, phoneNumber)){
+      if(!validatedValues(firstName, lastName, email, phoneNumber, password, confirmPassword)){
         return
       }
       response = await axios.post('http://localhost:3500/api/v1/user/register', {
