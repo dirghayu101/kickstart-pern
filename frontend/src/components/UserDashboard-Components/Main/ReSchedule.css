@@ -1,0 +1,12 @@
+.reschedule-modify {
+  font-size: 15px;
+  text-transform: uppercase;
+  padding: 0 15px;
+  transition: all 0.4s;
+}
+
+.reschedule-modify:hover {
+  color: green;
+  cursor: pointer;
+  transition: all 0.4s;
+}

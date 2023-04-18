@@ -1,0 +1,17 @@
+#orderPageBtn{
+    height: 35px;
+    width: 150px;
+    color: white;
+    background-color: yellowgreen;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 400ms;
+
+}
+
+#orderPageBtn:hover{
+    background-color: rgba(153, 205, 50, 0.683);
+    scale: 1.01;
+    cursor: pointer;
+    transition: all 400ms;
+}

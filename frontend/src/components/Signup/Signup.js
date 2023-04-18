@@ -109,6 +109,7 @@ const Signup = () => {
                 <span class="details">First Name</span>
                 <input
                   type="text"
+                  required
                   id="firstName"
                   value={firstName}
                   onChange={(e)=>setFName(e.target.value)}
@@ -124,6 +125,7 @@ const Signup = () => {
                 <input
                   type="text"
                   id="lastName"
+                  required
                   value={lastName}
                   onChange={(e)=>setLName(e.target.value)}
                   placeholder="Enter your last name"
@@ -137,6 +139,7 @@ const Signup = () => {
                 <span class="details">Email</span>
                 <input
                   type="text"
+                  required
                   id="emailID"
                   value={email}
                   onChange={(e)=>setEmail(e.target.value)}
@@ -150,6 +153,7 @@ const Signup = () => {
               <div class="input-box">
                 <span class="details">Phone Number</span>
                 <input
+                  required
                   type="text"
                   id="phoneNumber"
                   value={phoneNumber}
@@ -164,6 +168,7 @@ const Signup = () => {
               <div class="input-box">
                 <span class="details">Password</span>
                 <input
+                  required
                   type="password"
                   id="fPassword"
                   value={password}
@@ -178,6 +183,7 @@ const Signup = () => {
               <div class="input-box">
                 <span class="details">Confirm Password</span>
                 <input
+                  required
                   type="password"
                   id="sPassword"
                   value={confirmPassword}

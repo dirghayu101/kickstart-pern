@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios"
-import "./UserInformation.css"
+import "./UserInformation.css";
 
 const UserInformation = () => {
 
@@ -148,7 +148,7 @@ const UserInformation = () => {
         <input type="password" value={password} onChange={(event) => setCurrentPassword(event.target.value)}/>
       </label>
     </form>
-    <button onClick={handleClick}>Update</button>
+    <button id="updateBtn" onClick={handleClick}>Update</button>
   </>;
 };
 

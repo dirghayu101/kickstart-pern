@@ -94,7 +94,7 @@ const Main = () => {
     return (
       <tr>
         <td>{getSpaceType(seatID)}</td>
-        <td>{user.phoneNumber}</td>
+        <td>{user.phoneNumber || "Null"}</td>
         <td>{`${user.firstName} ${user.lastName}`}</td>
         <td>{getTimeAndDate(bookingTime)}</td>
         <td>₹{getSpacePrice(seatID)}</td>

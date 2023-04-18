@@ -1,0 +1,9 @@
+.helpBtnSupport {
+  transition: 0.2s all;
+}
+
+.helpBtnSupport:hover {
+  cursor: pointer;
+  color: rgba(255, 0, 0, 0.552);
+  transition: 0.2s all;
+}

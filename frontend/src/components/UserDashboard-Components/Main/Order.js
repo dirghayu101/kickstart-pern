@@ -23,7 +23,7 @@ const Order = () => {
 
   return (
     <>
-    <button onClick={swapComponent}>{buttonText}</button>
+    <button id="dashboardSwitchButton" onClick={swapComponent}>{buttonText}</button>
     <br/>
     <br/>
     {showActiveOrders?<ActiveOrders/>:<PastOrders/>}
