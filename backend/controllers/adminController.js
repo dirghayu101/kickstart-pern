@@ -348,7 +348,6 @@ module.exports.markFeedbackCellAsRead = catchAsyncError(
 	SET "feedbackRead"=true
 	WHERE "feedbackID"='${feedbackID}';`;
     const result = await databaseConnection.query(updateScript);
-    console.log(result);
     if (result) {
       res.status(200).json({
         success: true,

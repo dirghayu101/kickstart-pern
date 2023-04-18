@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "./Messages.css";
 /*
 1. Route to get all the unread feedbacks.
 2. Route to get all feedbacks which have been read.
@@ -38,7 +39,6 @@ const Messages = () => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     const response = await axios.get(getUrl);
     if (response.data.success) {
-      console.log(response.data.feedback);
       setFunction(response.data.feedback);
     } else {
       console.log("An error occurred.", response);
@@ -51,7 +51,6 @@ const Messages = () => {
     const url = `http://localhost:3500/api/v1/admin/info/user/all`;
     const response = await axios.get(url);
     if (response.data.success) {
-      console.log(response.data.result);
       setUsers(response.data.result);
     }
   }
@@ -105,7 +104,59 @@ const Messages = () => {
       phoneNumber,
     } = messageDetailObj;
 
-    return <></>;
+    return (
+      <main>
+        <div id="messageContainerMessagesComp">
+          <div class="upper-MessageComp">
+            <span
+              class="material-symbols-outlined"
+              onClick={() => {
+                setMessageDetail(!messageDetail);
+              }}
+            >
+              close
+            </span>
+          </div>
+          <div id="messageContainerCompTable">
+            <table>
+              <tbody>
+                <tr>
+                  <th>Name</th>
+                  <td>{username}</td>
+                </tr>
+                <tr>
+                  <th>Contact</th>
+                  <td>{phoneNumber}</td>
+                </tr>
+                <tr>
+                  <th>Message</th>
+                  <td>{comment}</td>
+                </tr>
+                <tr>
+                  <th>Time</th>
+                  <td>{time}</td>
+                </tr>
+                <tr>
+                  <th>Space</th>
+                  <td>{getSpaceType(seatNum)}</td>
+                </tr>
+                <tr>
+                  <th>Seat</th>
+                  <td>{seatNum}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          {!feedbackRead ? (
+            <div class="messagesMarkAsRead" id={feedbackID}>
+              <button onClick={markAsRead}>Mark as Read</button>
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+      </main>
+    );
   };
 
   const TableRow = (message) => {
@@ -122,7 +173,7 @@ const Messages = () => {
       feedbackID,
       feedbackRead,
       seatNum,
-      time,
+      time: getTimeAndDate(time),
       username,
       phoneNumber,
     };
@@ -135,7 +186,7 @@ const Messages = () => {
           <td>{comment.slice(0, 50) + addDot(comment)}</td>
           <td>
             <span
-              class="material-symbols-outlined"
+              class="material-symbols-outlined messageInfoMessageComp"
               onClick={() => {
                 showMessageDetail(messageObj);
               }}
@@ -143,7 +194,13 @@ const Messages = () => {
               info
             </span>
           </td>
-          {!feedbackRead ? <td onClick={markAsRead}>Mark as Read</td> : <></>}
+          {!feedbackRead ? (
+            <td onClick={markAsRead} className="markAsReadMessageComp">
+              Mark as Read
+            </td>
+          ) : (
+            <></>
+          )}
         </tr>
       </>
     );
@@ -172,10 +229,14 @@ const Messages = () => {
   }
 
   return messageDetail ? (
-    <>{/* the element detailing the reservation info */}</>
+    <>
+      <MessageDetail />
+    </>
   ) : (
     <main>
-      <button onClick={swapMessageType}>{buttonText}</button>
+      <div id="changeMessageCompValue">
+        <button onClick={swapMessageType}>{buttonText}</button>
+      </div>
       <h2>{headingText}</h2>
       <div className="recent-reservations">
         <table>
