@@ -21,6 +21,7 @@ const OrderCancel = (reservation) => {
   const [sendFeedback, setSendFeedback] = useState(false);
   const {
     space,
+    seatID,
     bookingTime,
     reservationDate,
     spacePrice,
@@ -42,6 +43,15 @@ const OrderCancel = (reservation) => {
     const timeDiff = targetDate.getTime() - currentDate.getTime();
     const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
     return hoursDiff;
+  }
+
+  async function sendMessageToAdmin() {
+    const comment = `The seat number ${seatID} of space ${space} booked on ${bookingTime} for ${reservationDate} has been cancelled.`;
+    const postObj = { seatNum: seatID, comment, rating: 5 };
+    const postURL = `http://localhost:3500/api/v1/user/reserve/post/feedback`;
+    const token = localStorage.getItem("token");
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    await axios.post(postURL, postObj);
   }
 
   const cancelRequest = async () => {
@@ -71,6 +81,7 @@ const OrderCancel = (reservation) => {
       const response = await axios.delete(deleteURL);
       if (response.data.success) {
         alert(response.data.message);
+        await sendMessageToAdmin();
       }
     } catch (error) {
       alert("Error: ", error.response.data.message);

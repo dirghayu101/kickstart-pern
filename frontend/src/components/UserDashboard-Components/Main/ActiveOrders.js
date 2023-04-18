@@ -2,21 +2,20 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-
 const ActiveOrders = () => {
   const [activeReservations, setActiveReservations] = useState([]);
 
   useEffect(() => {
-    document.querySelector("table").style.display = "none"
-    document.querySelector('.orders').classList.add('active')
+    document.querySelector("table").style.display = "none";
+    document.querySelector(".orders").classList.add("active");
     async function fetchReservations() {
       try {
         const token = localStorage.getItem("token");
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         const url = `http://localhost:3500/api/v1/user/reserve/history/current`;
         const response = await axios.get(url);
-        if(response.data.activeReservationHistory.length){
-          document.querySelector("table").style.display = "initial"
+        if (response.data.activeReservationHistory.length) {
+          document.querySelector("table").style.display = "initial";
           setActiveReservations(response.data.activeReservationHistory);
         }
       } catch (error) {
@@ -25,29 +24,29 @@ const ActiveOrders = () => {
     }
     fetchReservations();
     return () => {
-      document.querySelector("table").style.display = "initial"
-      document.querySelector('.orders').classList.remove('active');
-  };
+      document.querySelector("table").style.display = "initial";
+      document.querySelector(".orders").classList.remove("active");
+    };
   }, []);
 
   const getTimeAndDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleString();
-  }
+  };
 
   const getDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString();
-  }
-  function getSpaceType(seatID){
-    if(seatID >= 10000 && seatID < 20000){
-      return "Conference-Room"
-    } else if(seatID >= 20000 && seatID < 30000){
-      return "Cubicle"
-    } else if(seatID >= 30000 && seatID < 40000){
-      return "Hot-Seat"
-    } else{
-      return "Private-Office"
+  };
+  function getSpaceType(seatID) {
+    if (seatID >= 10000 && seatID < 20000) {
+      return "Conference-Room";
+    } else if (seatID >= 20000 && seatID < 30000) {
+      return "Cubicle";
+    } else if (seatID >= 30000 && seatID < 40000) {
+      return "Hot-Seat";
+    } else {
+      return "Private-Office";
     }
   }
 
@@ -81,7 +80,7 @@ const ActiveOrders = () => {
           <td>Reservation Date</td>
         </thead>
         <tbody>
-          {activeReservations.map((reservation) => (
+          {activeReservations.reverse().map((reservation) => (
             <TableRow key={reservation.reservationID} {...reservation} />
           ))}
         </tbody>
