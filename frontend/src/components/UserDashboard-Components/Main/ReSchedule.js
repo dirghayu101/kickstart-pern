@@ -73,6 +73,14 @@ const ReSchedule = () => {
     return hoursDiff;
   }
 
+  function calculateHoursToTargetDate(targetDate) {
+    const currentDate = new Date();
+    const targetDateTime = new Date(targetDate);
+    const diffInMilliseconds = targetDateTime - currentDate;
+    const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
+    return diffInHours;
+  }
+
   const handleClick = (event) => {
     const {
       seatID,
@@ -98,7 +106,7 @@ const ReSchedule = () => {
       alert("Reservation can be modified only once.");
       return;
     }
-    if (hoursUntil(getDate(reservationDate)) < 12) {
+    if (calculateHoursToTargetDate(reservationDate) < 12) {
       alert(
         "Reservation cannot bem modified less than 12 hours before the date."
       );

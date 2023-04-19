@@ -57,14 +57,14 @@ const Aside = () => {
           <span class="material-icons-sharp">inventory</span>
           <h3>Products</h3>
         </a>
-        <a href="/admin/dashboard/settings" class="settings">
+        {/* <a href="/admin/dashboard/settings" class="settings">
           <span class="material-icons-sharp">settings</span>
           <h3>Settings</h3>
-        </a>
-        <a href="/admin/dashboard/add" class="addProducts">
+        </a> */}
+        {/* <a href="/admin/dashboard/add" class="addProducts">
           <span class="material-icons-sharp">add</span>
           <h3>Add Products</h3>
-        </a>
+        </a> */}
         <a href="/admin/login" onClick={logoutAdmin}>
           <span class="material-icons-sharp">logout</span>
           <h3>Logout</h3>
