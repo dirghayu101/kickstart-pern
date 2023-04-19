@@ -26,6 +26,13 @@ module.exports.insertUser = async (req) => {
   return true;
 };
 
+module.exports.findUserByPhoneNumber = async (req) => {
+  let phoneNumber = req.body.phoneNumber;
+  const getQuery = `SELECT "userID", "mailID", password FROM public."User" WHERE "phoneNumber"='${phoneNumber}'`;
+  let { rows: result } = await databaseConnection.query(getQuery);
+  return result;
+};
+
 module.exports.findUser = async (req) => {
   let mailID = req.body.mailID;
   const getQuery = `SELECT  "userID", "mailID", password
@@ -77,7 +84,7 @@ module.exports.updatePassword = async (userID, newPassword) => {
 
 module.exports.updateUserInformationRequest = async (req) => {
   const { firstName, lastName, phoneNumber, mailID } = req.body;
-  const userID = req.query.id || req.user[0].userID 
+  const userID = req.query.id || req.user[0].userID;
   const updateScript = `UPDATE public."User"
 	SET  "phoneNumber"='${phoneNumber}', "firstName"='${firstName}', "lastName"='${lastName}', "mailID"='${mailID}' WHERE "userID" = '${userID}'`;
   let result;
@@ -92,58 +99,57 @@ module.exports.updateUserInformationRequest = async (req) => {
 
 // Reset password table insertion request
 module.exports.insertResetPasswordToken = async (req) => {
-  const userID = req.user[0].userID
-  const {ResetPasswordToken, ResetPasswordExpire} = req.resetTokenInfo
+  const userID = req.user[0].userID;
+  const { ResetPasswordToken, ResetPasswordExpire } = req.resetTokenInfo;
   const insertScript = `INSERT INTO public."Reset-Password"(
     "userID", "resetPasswordToken", "resetPasswordExpire")
-    VALUES ('${userID}', '${ResetPasswordToken}', '${ResetPasswordExpire}');`
-    let result
+    VALUES ('${userID}', '${ResetPasswordToken}', '${ResetPasswordExpire}');`;
+  let result;
   try {
-    result = await databaseConnection.query(insertScript)
+    result = await databaseConnection.query(insertScript);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-  databaseConnection.end
-  return result
-}
+  databaseConnection.end;
+  return result;
+};
 
 module.exports.RemoveTimedOutEntries = async () => {
-  let currentTime = Date.now()
-  const deleteScript = `DELETE FROM public."Reset-Password" WHERE "resetPasswordExpire" < '${currentTime}'`
-  let result
+  let currentTime = Date.now();
+  const deleteScript = `DELETE FROM public."Reset-Password" WHERE "resetPasswordExpire" < '${currentTime}'`;
+  let result;
   try {
-    result = await databaseConnection.query(deleteScript)
+    result = await databaseConnection.query(deleteScript);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-  databaseConnection.end
-  return result
-}
+  databaseConnection.end;
+  return result;
+};
 
 // Reset password delete tuple request
 module.exports.deleteResetToken = async (userID) => {
-  const deleteScript = `DELETE FROM public."Reset-Password" WHERE "userID" = '${userID}';`
-  let result
+  const deleteScript = `DELETE FROM public."Reset-Password" WHERE "userID" = '${userID}';`;
+  let result;
   try {
-    result = await databaseConnection.query(deleteScript)
+    result = await databaseConnection.query(deleteScript);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-  databaseConnection.end
-  return result
-}
+  databaseConnection.end;
+  return result;
+};
 
 // Find user with ResetPasswordToken
 module.exports.findUserWithResetPasswordToken = async (resetPasswordToken) => {
-  const selectScript = `SELECT "userID", "resetPasswordToken","resetPasswordExpire" FROM public."Reset-Password" WHERE "resetPasswordToken"='${resetPasswordToken}';`
-  let result
+  const selectScript = `SELECT "userID", "resetPasswordToken","resetPasswordExpire" FROM public."Reset-Password" WHERE "resetPasswordToken"='${resetPasswordToken}';`;
+  let result;
   try {
     const { rows } = await databaseConnection.query(selectScript);
     result = rows;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-  databaseConnection.end
-  return result
-}
-
+  databaseConnection.end;
+  return result;
+};

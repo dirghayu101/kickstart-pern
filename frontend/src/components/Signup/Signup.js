@@ -1,102 +1,120 @@
 import React from "react";
 import "./Signup.css";
-import {useState} from "react"
-import { useNavigate} from "react-router-dom";
-import axios from "axios"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [password, setPassword] = useState('')
-  const [email, setEmail] = useState('')
-  const [firstName, setFName] = useState('')
-  const [lastName, setLName] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
- 
-  const validatedValues = (firstName, lastName, email, phoneNumber, password, confirmPassword) => {
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [firstName, setFName] = useState("");
+  const [lastName, setLName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const validatedValues = (
+    firstName,
+    lastName,
+    email,
+    phoneNumber,
+    password,
+    confirmPassword
+  ) => {
     // First Name Validation
     var namePattern = /^[a-zA-Z]+$/;
-    if(!firstName){
-      alert("First name not entered!")
-      return false;  
+    if (!firstName) {
+      alert("First name not entered!");
+      return false;
     }
-    if(!namePattern.test(firstName)) {
+    if (!namePattern.test(firstName)) {
       alert("First name should contain only alphabets");
       return false;
     }
     // Last Name Validation
-    if(!namePattern.exec(lastName)) {
+    if (!namePattern.exec(lastName)) {
       alert("Last name should contain only alphabets");
       return false;
     }
     // Email Validation
     var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!email){
-      alert("Email not entered!")
-      return false  //Return false in case the validation fails. DO NOT FORGET.
+    if (!email) {
+      alert("Email not entered!");
+      return false; //Return false in case the validation fails. DO NOT FORGET.
     }
-    if(!emailPattern.exec(email)) {
+    if (!emailPattern.exec(email)) {
       alert("Invalid email format!");
       return false;
     }
     // Phone number validation
     var phonePattern = /^(?!0{10})\+?\d{10,}$/;
-    if(!phoneNumber){
-      alert("Phone number not entered!")
-      return false;  
+    if (!phoneNumber) {
+      alert("Phone number not entered!");
+      return false;
     }
-    if(!phonePattern.exec(phoneNumber)) {
+    if (!phonePattern.exec(phoneNumber)) {
       alert("Invalid phone number!");
       return false;
     }
     // Password validation: Should have small character, alphanumeric and a symbol and one character in caps. Put validation for that.
-    var pwdPattern =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/;
-    if(!password){
-      alert("Password not entered!")
-      return false  //Return false in case the validation fails. DO NOT FORGET.
+    var pwdPattern =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/;
+    if (!password) {
+      alert("Password not entered!");
+      return false; //Return false in case the validation fails. DO NOT FORGET.
     }
-    if(!pwdPattern.exec(password)) {
-      alert("Password should have atleast one uppercase character, one lowercase character, one number and one special symbol")
-      return false
+    if (!pwdPattern.exec(password)) {
+      alert(
+        "Password should have atleast one uppercase character, one lowercase character, one number and one special symbol"
+      );
+      return false;
     }
-    if(!confirmPassword){
-      alert("Confirm Password not entered!")
-      return false  
+    if (!confirmPassword) {
+      alert("Confirm Password not entered!");
+      return false;
     }
     if (password !== confirmPassword) {
-      alert("Password and confirm password do not match!")
-      return false
+      alert("Password and confirm password do not match!");
+      return false;
     }
-    return true   //Return true only is all the values have been successfully validated.
-
-  }
+    return true; //Return true only is all the values have been successfully validated.
+  };
 
   const handleClick = async (event) => {
-    event.preventDefault()
-    let response
+    event.preventDefault();
+    let response;
     try {
-      if(!validatedValues(firstName, lastName, email, phoneNumber, password, confirmPassword)){
-        return
+      if (
+        !validatedValues(
+          firstName,
+          lastName,
+          email,
+          phoneNumber,
+          password,
+          confirmPassword
+        )
+      ) {
+        return;
       }
-      response = await axios.post('http://localhost:3500/api/v1/user/register', {
-      password,
-      mailID:email,
-      firstName,
-      lastName,
-      phoneNumber,
-      gender:'Male'
-    })
-    if(response.data.success){
-      navigate('/login')
-    }
+      response = await axios.post(
+        "http://localhost:3500/api/v1/user/register",
+        {
+          password,
+          mailID: email,
+          firstName,
+          lastName,
+          phoneNumber,
+          gender: "Male",
+        }
+      );
+      if (response.data.success) {
+        navigate("/login");
+      }
     } catch (error) {
-      console.log("error", error)
-      alert("An error occurred.")
-      navigate('/sign-up')
+      alert(error.response.data.message);
+      navigate("/sign-up");
     }
-    
-     
-  }
+  };
 
   return (
     <body class="body-signUp">
@@ -112,7 +130,7 @@ const Signup = () => {
                   required
                   id="firstName"
                   value={firstName}
-                  onChange={(e)=>setFName(e.target.value)}
+                  onChange={(e) => setFName(e.target.value)}
                   placeholder="Enter your first name"
                 />
                 <i class="fa-solid fa-circle-check"></i>
@@ -127,7 +145,7 @@ const Signup = () => {
                   id="lastName"
                   required
                   value={lastName}
-                  onChange={(e)=>setLName(e.target.value)}
+                  onChange={(e) => setLName(e.target.value)}
                   placeholder="Enter your last name"
                 />
                 <i class="fa-solid fa-circle-check"></i>
@@ -142,7 +160,7 @@ const Signup = () => {
                   required
                   id="emailID"
                   value={email}
-                  onChange={(e)=>setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                 />
                 <i class="fa-solid fa-circle-check"></i>
@@ -157,7 +175,7 @@ const Signup = () => {
                   type="text"
                   id="phoneNumber"
                   value={phoneNumber}
-                  onChange={(e)=>setPhoneNumber(e.target.value)}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
                   placeholder="Enter your number"
                 />
                 <i class="fa-solid fa-circle-check"></i>
@@ -172,7 +190,7 @@ const Signup = () => {
                   type="password"
                   id="fPassword"
                   value={password}
-                  onChange={(e)=>setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                 />
                 <i class="fa-solid fa-circle-check"></i>
@@ -187,7 +205,7 @@ const Signup = () => {
                   type="password"
                   id="sPassword"
                   value={confirmPassword}
-                  onChange={(e)=>setConfirmPassword(e.target.value)}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm your password"
                 />
                 <i class="fa-solid fa-circle-check"></i>

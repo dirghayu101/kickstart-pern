@@ -9,7 +9,7 @@ const {
   forgotPassword,
   resetPassword,
   sendUserInformation,
-  resetPasswordPage
+  resetPasswordPage,
 } = require("../controllers/userController");
 
 // This middleware will verify the user before giving them access to the data.
@@ -21,12 +21,18 @@ const {
   verifyUserPassword,
   checkUserDoesNotExist,
   forgotPasswordValidations,
+  checkMobileNumberExist,
 } = require("../middleware/validationMiddleware");
 
 // Get is a test route.
 router
   .route("/register")
-  .post(checkUserDoesNotExist, runValidationUser, registerUser);
+  .post(
+    checkUserDoesNotExist,
+    checkMobileNumberExist,
+    runValidationUser,
+    registerUser
+  );
 
 router.route("/login").post(checkUserDoExist, verifyUserPassword, loginUser);
 
@@ -45,10 +51,13 @@ router
     updateUserInformation
   );
 
-router.route("/user-info").get(isAuthenticatedUser, sendUserInformation)
+router.route("/user-info").get(isAuthenticatedUser, sendUserInformation);
 
 router.route("/password/forgot").post(checkUserDoExist, forgotPassword);
 
-router.route("/password/reset/:token").get(resetPasswordPage).put(forgotPasswordValidations, resetPassword)
+router
+  .route("/password/reset/:token")
+  .get(resetPasswordPage)
+  .put(forgotPasswordValidations, resetPassword);
 
 module.exports = router;
