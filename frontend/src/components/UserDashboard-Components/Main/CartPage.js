@@ -46,6 +46,9 @@ function CartPage() {
     const item = cartData.find((item) => item.itemID === itemId);
     const reserveDate = document.querySelector(`#${item.itemID}`).value;
     if (item) {
+      if (item.value >= 2) {
+        return alert("More than 2 spaces cannot be reserved at once.");
+      }
       const updatedItem = { ...item, value: item.value + 1, reserveDate };
       const updatedCart = cartData.map((item) =>
         item.itemID === itemId ? updatedItem : item
