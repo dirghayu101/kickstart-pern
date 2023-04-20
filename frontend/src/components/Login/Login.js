@@ -3,7 +3,8 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-const Login = ({ filler, urlPost, urlNavigate }) => {
+const Login = ({ filler, urlPost, urlNavigate, css }) => {
+  console.log(css);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -84,10 +85,19 @@ const Login = ({ filler, urlPost, urlNavigate }) => {
           ) : (
             <></>
           )}
-          <input type="submit" value="Login" onClick={handleClick} />
-          <div class="signup_link">
-            Not a member? <a href="/sign-up">Signup</a>
-          </div>
+          <input
+            type="submit"
+            value="Login"
+            style={css}
+            onClick={handleClick}
+          />
+          {filler === "User" ? (
+            <div class="signup_link">
+              Not a member? <a href="/sign-up">Signup</a>
+            </div>
+          ) : (
+            <></>
+          )}
         </form>
       </div>
     </div>
