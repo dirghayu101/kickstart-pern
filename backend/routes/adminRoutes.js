@@ -20,6 +20,8 @@ const {
   getUnreadFeedbacks,
   cancelReservationAdminRoute,
   updateReservationViaAdmin,
+  sendCurrentReservationOfTheUser,
+  sendAllReservationOfTheUser,
 } = require("../controllers/adminController");
 const {
   checkUserDoesNotExist,
@@ -150,5 +152,15 @@ router
 router
   .route("/reservation/feedbacks/:feedbackID")
   .post(isAuthenticatedAdmin, markFeedbackCellAsRead);
+
+router
+  .route("/current/reservation/userbyid/:uid")
+  .get(isAuthenticatedAdmin, sendCurrentReservationOfTheUser);
+
+router
+  .route("/all/reservation/userbyid/:uid")
+  .get(isAuthenticatedAdmin, sendAllReservationOfTheUser);
+
+router.route("/all/feedbacks/user");
 
 module.exports = router;

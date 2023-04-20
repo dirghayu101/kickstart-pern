@@ -6,10 +6,13 @@ const jwt = require("jsonwebtoken");
 const {
   insertUser,
   updateUserInformationRequest,
+  getUserByID,
 } = require("../database/databaseUserRequests");
 const {
   cancelReservation,
   updateReservation,
+  allReservationHistory,
+  activeReservationHistory,
 } = require("./userReservationController");
 
 const spaceAndSeatID = {
@@ -350,6 +353,24 @@ module.exports.markFeedbackCellAsRead = catchAsyncError(
     } else {
       return next(new ErrorHandler(`Something went wrong!`, 500));
     }
+  }
+);
+
+module.exports.sendCurrentReservationOfTheUser = catchAsyncError(
+  async (req, res, next) => {
+    const userID = { userID: req.params.uid };
+    req.user = [];
+    req.user.push(userID);
+    activeReservationHistory(req, res, next);
+  }
+);
+
+module.exports.sendAllReservationOfTheUser = catchAsyncError(
+  async (req, res, next) => {
+    const userID = { userID: req.params.uid };
+    req.user = [];
+    req.user.push(userID);
+    allReservationHistory(req, res, next);
   }
 );
 

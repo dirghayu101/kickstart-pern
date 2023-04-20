@@ -13,3 +13,8 @@
 .imgBoxMainComp p {
   margin-left: 10px;
 }
+
+.imgBoxMainComp strong {
+  font-size: 17px;
+  padding-right: 5px;
+}
