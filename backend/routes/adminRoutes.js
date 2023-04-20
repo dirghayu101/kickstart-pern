@@ -22,6 +22,7 @@ const {
   updateReservationViaAdmin,
   sendCurrentReservationOfTheUser,
   sendAllReservationOfTheUser,
+  sendFeedbackOfUser,
 } = require("../controllers/adminController");
 const {
   checkUserDoesNotExist,
@@ -161,6 +162,8 @@ router
   .route("/all/reservation/userbyid/:uid")
   .get(isAuthenticatedAdmin, sendAllReservationOfTheUser);
 
-router.route("/all/feedbacks/user");
+router
+  .route("/all/feedbacks/user/:uid")
+  .get(isAuthenticatedAdmin, sendFeedbackOfUser);
 
 module.exports = router;

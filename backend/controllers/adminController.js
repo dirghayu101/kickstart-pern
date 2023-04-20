@@ -395,3 +395,13 @@ module.exports.updateReservationViaAdmin = catchAsyncError(
     return updateReservation(req, res, next);
   }
 );
+
+module.exports.sendFeedbackOfUser = catchAsyncError(async (req, res, next) => {
+  const userID = req.params.uid;
+  const selectQuery = `SELECT * FROM public."Reservation-Feedback" WHERE "userID"='${userID}'`;
+  const { rows } = await databaseConnection.query(selectQuery);
+  res.status(200).json({
+    success: true,
+    result: rows,
+  });
+});
