@@ -1,0 +1,7 @@
+.currentOrderCompRow > td > input {
+  text-align: center;
+}
+
+.currentOrderCompRow > td > span {
+  margin-left: 13px;
+}

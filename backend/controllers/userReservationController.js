@@ -190,10 +190,7 @@ module.exports.cancelReservation = catchAsyncError(async (req, res, next) => {
 });
 
 module.exports.updateReservation = catchAsyncError(async (req, res, next) => {
-  const { seatID, wasMuted, reservationID } = req.reservationInfo[0];
-  if (wasMuted) {
-    return next(new ErrorHandler("You cannot update more than once.", 401));
-  }
+  const { seatID, reservationID } = req.reservationInfo[0];
   const { newDate } = req.body;
   const space = getSpaceType(seatID);
   const { seatID: seatNum } = await getSeatNumber(space, newDate);

@@ -1,22 +1,26 @@
 import React from "react";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import "./CurrentOrder.css";
 
 const CurrentOrders = () => {
   const [allOrders, setAllOrders] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
+  const [tableEditable, setTableEditable] = useState(false);
 
   async function fetchAllOrders() {
     const token = localStorage.getItem("token");
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    const getUrl = `http://localhost:3500/api/v1/admin/info/current/reservation`;
-    const response = await axios.get(getUrl);
-    if (response.data.success) {
-      setAllOrders(response.data.response);
-    } else {
-      console.log("An error occurred.", response);
+    const deleteUrl = `http://localhost:3500/api/v1/admin/info/current/reservation`;
+    try {
+      const response = await axios.get(deleteUrl);
+      if (response.data.success) {
+        setAllOrders(response.data.response);
+      }
       return;
+    } catch (error) {
+      alert(error.response.data.message);
     }
   }
 
@@ -69,29 +73,95 @@ const CurrentOrders = () => {
     return date.toLocaleDateString();
   }
 
+  function makeTableEditable(event) {
+    setTableEditable(!tableEditable);
+  }
+
+  async function saveEditsMods(event) {
+    if (!tableEditable) {
+      return;
+    }
+    const reserveID = event.target.parentNode.parentNode.id;
+    const reserveRow = event.target.parentNode.parentNode;
+    const newDate = reserveRow.querySelector("input").value;
+    const token = localStorage.getItem("token");
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    const patchUrl = `http://localhost:3500/api/v1/admin/modify/current-reservation/update/${reserveID}`;
+    try {
+      const response = await axios.patch(patchUrl, { newDate });
+      if (response.data.success) {
+        window.location.reload();
+      }
+    } catch (error) {
+      alert("An error occurred in the database...");
+    } finally {
+      setTableEditable(!tableEditable);
+    }
+  }
+
+  async function cancelReservation(event) {
+    const reserveID = event.target.parentNode.id;
+    const token = localStorage.getItem("token");
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    const deleteURL = `http://localhost:3500/api/v1/admin/modify/current-reservation/cancel/${reserveID}`;
+    const result = await axios.delete(deleteURL);
+    if (result.data.success) {
+      window.location.reload();
+    } else {
+      alert("An error occurred in the database");
+    }
+  }
+
+  function convertDateFormat(dateString) {
+    const [day, month, year] = dateString.split("/");
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+  }
   const TableRow = (reserveObj) => {
     const {
       bookingTime,
       reservationDate,
+      reservationID,
       seatID,
       userID,
-      wasMuted
+      wasMuted,
     } = reserveObj;
     const user = getUser(userID);
-    if(!user){
-        return(
-            <></>
-        )
+    if (!user) {
+      return <></>;
     }
     return (
-      <tr>
-        <td>{user.firstName+" "+user.lastName}</td>
+      <tr id={reservationID} class="currentOrderCompRow">
+        <td>{user.firstName + " " + user.lastName}</td>
         <td>{user.phoneNumber}</td>
         <td>{seatID}</td>
         <td>{getSpaceType(seatID)}</td>
         <td>{wasMuted ? "Yes" : "No"}</td>
         <td>{getTimeAndDate(bookingTime)}</td>
-        <td>{getDate(reservationDate)}</td>
+        <td>
+          {!tableEditable ? (
+            <input
+              type="date"
+              defaultValue={convertDateFormat(getDate(reservationDate))}
+              disabled="all"
+            />
+          ) : (
+            <input
+              type="date"
+              defaultValue={convertDateFormat(getDate(reservationDate))}
+            />
+          )}
+        </td>
+        <td className="danger delete-row" onClick={cancelReservation}>
+          Cancel
+        </td>
+        <td>
+          <span
+            className="save-button material-icons-sharp"
+            onClick={saveEditsMods}
+          >
+            save
+          </span>
+        </td>
       </tr>
     );
   };
@@ -99,9 +169,9 @@ const CurrentOrders = () => {
   return (
     <>
       <h2>Active Orders</h2>
-        <div className="recent-reservations">
-          <table>
-            <thead>
+      <div className="recent-reservations">
+        <table>
+          <thead>
             <tr>
               <th>Name</th>
               <th>Contact</th>
@@ -110,15 +180,23 @@ const CurrentOrders = () => {
               <th>Modified</th>
               <th>Booking Time</th>
               <th>Reservation Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allOrders.map((order) => (
-                <TableRow key={uuid()} {...order} />
-              ))}
-            </tbody>
-          </table>
-        </div>
+              <th>
+                <span
+                  className="edit-button material-icons-sharp"
+                  onClick={makeTableEditable}
+                >
+                  edit
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {allOrders.map((order) => (
+              <TableRow key={order.reservationID} {...order} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 };

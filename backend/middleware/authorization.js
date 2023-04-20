@@ -90,6 +90,9 @@ exports.cancelValidations = catchAsyncError(async (req, res, next) => {
       new ErrorHandler("Invalid action, reservation doesn't exist.", 400)
     );
   }
+  if (rows[0].wasMuted) {
+    return next(new ErrorHandler("You cannot update more than once.", 401));
+  }
   if (dateInvalid(rows, next)) {
     return next(
       new ErrorHandler(

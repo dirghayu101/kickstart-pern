@@ -18,6 +18,8 @@ const {
   getReadFeedbacks,
   markFeedbackCellAsRead,
   getUnreadFeedbacks,
+  cancelReservationAdminRoute,
+  updateReservationViaAdmin,
 } = require("../controllers/adminController");
 const {
   checkUserDoesNotExist,
@@ -33,6 +35,7 @@ const {
 const { isAuthenticatedAdmin } = require("../middleware/authorization");
 const {
   sendSpacesAvailable,
+  updateReservation,
 } = require("../controllers/userReservationController");
 
 const router = express.Router();
@@ -108,24 +111,14 @@ router
 // CRUD user in the database
 
 // TODO: Get information about all the spaces available.
+
 router
-  .route("/modify/row/reservation")
-  .post(
-    isAuthenticatedAdmin,
-    updateCurrentAndAllReservationTable,
-    makeReservationViaAdmin
-  )
-  .delete(
-    isAuthenticatedAdmin,
-    updateCurrentAndAllReservationTable,
-    cancelReservationViaAdmin
-  )
-  .patch(
-    isAuthenticatedAdmin,
-    updateCurrentAndAllReservationTable,
-    modifyReservationViaAdmin
-  );
-// CRUD in the reservation table rows.
+  .route("/modify/current-reservation/cancel/:reserveID")
+  .delete(isAuthenticatedAdmin, cancelReservationAdminRoute);
+
+router
+  .route("/modify/current-reservation/update/:reserveID")
+  .patch(isAuthenticatedAdmin, updateReservationViaAdmin);
 
 router
   .route("/modify/db/reservation")

@@ -2,9 +2,11 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "./MainComp.css";
 
 const Main = () => {
   const [catalogueObjects, setCatalogueObjects] = useState([]);
+  const [showSpaceInfo, setShowSpaceInfo] = useState(false);
   const navigate = useNavigate();
   const currentDate = () => {
     const today = new Date();
@@ -67,25 +69,38 @@ const Main = () => {
   }
 
   const spaceObjects = {
-    "Conference_Room": {
+    Conference_Room: {
       img: "/images/dashboard-assets/conferenceRoom.webp",
       spaceType: "Conference Room",
       spacePrice: "For ₹6000 per day",
+      description: "We have a perfect solution to fit all your meeting needs.",
+      capacity: "7-8 people",
+      facilities:
+        "WiFi, Canteen Services, IT support, sound proof, session-recorders",
     },
-    "Private_Office": {
+    Private_Office: {
       img: "/images/dashboard-assets/privateOffice.webp",
       spaceType: "Private Office",
       spacePrice: "For ₹1500 per day",
+      description: "A perfect solution to fit all your personal office needs.",
+      capacity: "2 people",
+      facilities: "WiFi, Canteen Services, IT support",
     },
-    "Hot_Seat": {
+    Hot_Seat: {
       img: "/images/dashboard-assets/hotSeat.webp",
       spaceType: "Hot Seat",
       spacePrice: "For ₹600 per day",
+      description: "A comfortable space for your daily work.",
+      capacity: "1 person",
+      facilities: "WiFi, sound proof, coffee-machine",
     },
-    "Cubicle": {
+    Cubicle: {
       img: "/images/dashboard-assets/cubicle.webp",
       spaceType: "Cubicle",
       spacePrice: "For ₹300 per day",
+      description: "A space just for you.",
+      capacity: "1 person",
+      facilities: "WiFi, coffee-machine",
     },
   };
 
@@ -114,7 +129,10 @@ const Main = () => {
   const handleClick = (event) => {
     let cartData = JSON.parse(localStorage.getItem("cartData")) || [];
     const button = event.target;
-    const itemID = button.parentElement.querySelector("h2").textContent.trim().replace(/\s+/g, '_');
+    const itemID = button.parentElement
+      .querySelector("h2")
+      .textContent.trim()
+      .replace(/\s+/g, "_");
     const notClicked =
       button.classList.contains("book-btn") &&
       button.classList.contains("addBtn") &&
@@ -125,11 +143,11 @@ const Main = () => {
         cartData.push({
           itemID,
           value: 1,
-          reserveDate: new Date().toISOString().slice(0, 10)
+          reserveDate: new Date().toISOString().slice(0, 10),
         });
       } else {
         getItem.value = 1;
-        getItem.reserveDate = new Date().toISOString().slice(0, 10)
+        getItem.reserveDate = new Date().toISOString().slice(0, 10);
       }
       button.classList.remove("addBtn", "book-btn", "removeBtn");
       button.classList.add("remove-book-btn");
@@ -145,14 +163,61 @@ const Main = () => {
     localStorage.setItem("cartData", JSON.stringify(cartData));
   };
 
+  const putSpaceHoverEffect = () => {
+    setShowSpaceInfo(true);
+  };
+
+  const removeSpaceHoverEffect = () => {
+    setShowSpaceInfo(false);
+  };
+
+  const SpaceImage = (obj) => {
+    const { img, space } = obj;
+    const { spaceType, spacePrice, description, capacity, facilities } =
+      spaceObjects[space];
+    console.log("The image is ", img);
+    return (
+      <>
+        <div
+          className="image-box imgBoxMainComp"
+          onMouseOver={putSpaceHoverEffect}
+          onMouseOut={removeSpaceHoverEffect}
+        >
+          {showSpaceInfo ? (
+            <>
+              <h3>{spaceType}</h3>
+              <p>
+                <strong>Description: </strong>
+                {description}
+              </p>
+              <p>
+                <strong>Capacity: </strong>
+                {capacity}
+              </p>
+              <p>
+                <strong>Facilities: </strong>
+                {facilities}
+              </p>
+              <p>
+                <strong>Price: </strong>
+                {spacePrice}
+              </p>
+            </>
+          ) : (
+            <img src={img} alt="space" className="space-image" />
+          )}
+        </div>
+      </>
+    );
+  };
+
   const getElement = (space) => {
-    space = space.replace("-", "_")
+    space = space.replace("-", "_");
     const { img, spaceType, spacePrice } = spaceObjects[space];
     return (
       <div className="space">
-        <div className="image-box">
-          <img src={img} alt="space" className="space-image" />
-        </div>
+        <SpaceImage img={img} space={space} />
+
         <div className="space-info">
           <h2>{spaceType}</h2>
           <p>{spacePrice}.</p>

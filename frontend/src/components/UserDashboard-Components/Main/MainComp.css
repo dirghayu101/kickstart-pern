@@ -1,0 +1,15 @@
+.imgBoxMainComp {
+  min-height: 290px;
+  transition: 0.5s ease;
+}
+
+.imgBoxMainComp h3 {
+  text-align: center;
+  font-size: 18px;
+  padding-top: 15px;
+  padding-bottom: 14px;
+}
+
+.imgBoxMainComp p {
+  margin-left: 10px;
+}

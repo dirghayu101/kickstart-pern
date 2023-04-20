@@ -7,6 +7,10 @@ const {
   insertUser,
   updateUserInformationRequest,
 } = require("../database/databaseUserRequests");
+const {
+  cancelReservation,
+  updateReservation,
+} = require("./userReservationController");
 
 const spaceAndSeatID = {
   "Conference-Room": 10000,
@@ -135,7 +139,7 @@ module.exports.sendActiveReservationInformation = catchAsyncError(
     tNum = getTNumScript(tNum);
     userID = getUserIDScript(userID);
     seatID = getSeatIDScript(seatID);
-    sqlQuery = `SELECT "userID", "seatID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted" FROM public."Current-Reservation-Table" WHERE ${space}${status}${dateScript}${tNum}${userID}${seatID}`;
+    sqlQuery = `SELECT "userID", "seatID", "transactionNumber", "reservationID","bookingTime", "reservationDate", "wasMuted" FROM public."Current-Reservation-Table" WHERE ${space}${status}${dateScript}${tNum}${userID}${seatID}`;
     const { rows: dbResult } = await databaseConnection.query(sqlQuery);
     res.status(200).json({
       success: true,
@@ -289,15 +293,6 @@ module.exports.cancelReservationViaAdmin = catchAsyncError(
   }
 );
 
-module.exports.modifyReservationViaAdmin = catchAsyncError(
-  async (req, res, next) => {
-    res.status(200).json({
-      success: true,
-      message: "Received your request in update reservation via admin route.",
-    });
-  }
-);
-
 module.exports.modifySpaceTablesViaAdmin = catchAsyncError(
   async (req, res, next) => {
     res.status(200).json({
@@ -355,5 +350,27 @@ module.exports.markFeedbackCellAsRead = catchAsyncError(
     } else {
       return next(new ErrorHandler(`Something went wrong!`, 500));
     }
+  }
+);
+
+module.exports.cancelReservationAdminRoute = catchAsyncError(
+  async (req, res, next) => {
+    const reserveID = req.params.reserveID;
+    const { rows } =
+      await databaseConnection.query(`SELECT "userID", "seatID", "reservationID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted"
+	FROM public."Current-Reservation-Table" WHERE "reservationID"='${reserveID}'`);
+    req.reservationInfo = rows;
+    return cancelReservation(req, res, next);
+  }
+);
+
+module.exports.updateReservationViaAdmin = catchAsyncError(
+  async (req, res, next) => {
+    const reserveID = req.params.reserveID;
+    const { rows } =
+      await databaseConnection.query(`SELECT "userID", "seatID", "reservationID", "transactionNumber", "bookingTime", "reservationDate", "wasMuted"
+	FROM public."Current-Reservation-Table" WHERE "reservationID"='${reserveID}'`);
+    req.reservationInfo = rows;
+    return updateReservation(req, res, next);
   }
 );
