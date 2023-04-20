@@ -1,16 +1,16 @@
-// const {Client} = require('pg')
+// const { Client } = require("pg");
 
 // const dbObject = {
-//     host: 'localhost',
-//     user:  'postgres',
-//     port: 5432,
-//     password: '618903',
-//     database: 'Kickstart-MERN-Database'
-// }
+//   host: "localhost",
+//   user: "postgres",
+//   port: 5432,
+//   password: "618903",
+//   database: "Joshua-Shit",
+// };
 
-// const client = new Client(dbObject)
+// const client = new Client(dbObject);
 
-// module.exports = client
+// module.exports = client;
 
 // NOTE: New one starts here.
 const pg = require("pg");

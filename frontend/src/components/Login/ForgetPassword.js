@@ -1,34 +1,40 @@
 import "./Login.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
+  const navigate = useNavigate();
 
   function validatedValues(email, password) {
-    if(!email || !password){
-        alert("Enter the fields specified.")
-        return false
+    if (!email || !password) {
+      alert("Enter the fields specified.");
+      return false;
     }
     // Validation for email will come here.
-    return true
+    return true;
   }
 
   const handleClick = async (event) => {
     event.preventDefault();
     try {
       if (!validatedValues(email, "random")) {
-        return
+        return;
       }
-      const response = await axios.post("http://localhost:3500/api/v1/user/password/forgot", {
-        mailID: email
-      })
-      if(response.data.success){
-        alert("Checkout your mailbox to find URL to change the password.")
+      const response = await axios.post(
+        "http://localhost:3500/api/v1/user/password/forgot",
+        {
+          mailID: email,
+        }
+      );
+      if (response.data.success) {
+        alert("Checkout your mailbox to find URL to change the password.");
+        navigate("/login");
       }
     } catch (error) {
-        console.log(error)
-        alert("Invalid entry!")
+      console.log(error);
+      alert("Invalid entry!");
     }
   };
 
