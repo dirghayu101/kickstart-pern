@@ -91,6 +91,9 @@ const Main = () => {
   const TableRow = (reserveObj) => {
     const { bookingTime, reservationDate, seatID, userID } = reserveObj;
     const user = getUser(userID);
+    if (!user) {
+      return <></>;
+    }
     return (
       <tr>
         <td>{getSpaceType(seatID)}</td>
